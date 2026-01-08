@@ -29,6 +29,8 @@
 
 package org.firstinspires.ftc.teamcode.pedroPathing;
 
+import static org.firstinspires.ftc.teamcode.pedroPathing.Tuning.follower;
+
 import com.bylazar.configurables.annotations.Configurable;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
@@ -155,6 +157,35 @@ public class AprilTagEasy extends LinearOpMode {
                     fiducial.getRobotPoseFieldSpace().getPosition().x,
                     fiducial.getRobotPoseFieldSpace().getPosition().y,
                     fiducial.getRobotPoseFieldSpace().getPosition().z));
+
+            double x = fiducial.getTargetXDegrees();
+            double y = fiducial.getTargetXDegrees();
+            double angleToRot = (limelight.getStatus().getFinalYaw()) - Math.toDegrees(Math.atan((138-y)/(138-x)));
+            laxonPos = .4889 + (.2705/90)*angleToRot;
+            raxonPos = .4889 + (.2705/90)*angleToRot;
+
+            if(raxonPos > 1)
+            {
+                raxonPos = 1;
+            }
+            if(raxonPos < .1894)
+            {
+                raxonPos = .1894;
+            }
+            if(laxonPos < .1894)
+            {
+                laxonPos = .1894;
+            }
+            if(laxonPos > 1)
+            {
+                laxonPos = 1;
+            }
+
+            raxon.setPosition(raxonPos);
+            laxon.setPosition(laxonPos);
+
+            telemetry.addData("raxon",raxon.getPosition());
+            telemetry.addData("laxon",laxon.getPosition());
 
         }
 
