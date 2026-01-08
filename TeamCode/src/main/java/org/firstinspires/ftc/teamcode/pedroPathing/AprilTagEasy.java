@@ -39,6 +39,7 @@ import com.qualcomm.hardware.limelightvision.LLStatus;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
@@ -65,6 +66,14 @@ import java.util.Locale;
  *
  * To experiment with using AprilTags to navigate, try out these two driving samples:
  * RobotAutoDriveToAprilTagOmni and RobotAutoDriveToAprilTagTank
+ *
+ * Hafza's comments:
+ * all we really need are the Tx value and the YAW
+ *Tx: for the PID loop that is gonna control servo power and rotation to align with the April tag
+ *YAW: using botpose we can find roll, pitch, yaw, then use these degrees to see mounting orientation
+ *  IT WILL BE FIELD CENTRIC THO!
+ *positive Tx is left
+ * for continuous power = error * kP
  */
 @Configurable
 @TeleOp(name = "AprilTagEasy")
@@ -72,11 +81,20 @@ public class AprilTagEasy extends LinearOpMode {
 
     // Change this to Limelight3A
     private Limelight3A limelight;
+    private Servo raxon;
+
+    private Servo laxon;
+    private double raxonPos;
+    private double laxonPos;
+
 
     @Override
     public void runOpMode() {
 
         // Initialize Limelight BEFORE waitForStart()
+        raxon = hardwareMap.get(Servo.class,"raxon");
+        laxon = hardwareMap.get(Servo.class,"laxon");
+
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
         limelight.setPollRateHz(100);
         limelight.pipelineSwitch(0); // Switch to AprilTag pipeline
@@ -87,6 +105,9 @@ public class AprilTagEasy extends LinearOpMode {
         while (opModeIsActive()) {
 
             telemetryAprilTag();
+
+            raxon.setPosition(.6094);
+            laxon.setPosition(.6094);
 
             // Push telemetry to the Driver Station.
             telemetry.update();
@@ -134,6 +155,7 @@ public class AprilTagEasy extends LinearOpMode {
                     fiducial.getRobotPoseFieldSpace().getPosition().x,
                     fiducial.getRobotPoseFieldSpace().getPosition().y,
                     fiducial.getRobotPoseFieldSpace().getPosition().z));
+
         }
 
         telemetry.addLine("\nNote: Using Limelight API for AprilTag detection");
