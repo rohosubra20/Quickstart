@@ -222,7 +222,7 @@ public class RedTeleOp extends OpMode {
             gate.setPosition(0);
         }
         if ( gamepad1.right_stick_button){
-            gate.setPosition(.1);
+            gate.setPosition(.2);
         }
 
         if(raxonPos > 1)
@@ -458,7 +458,7 @@ public class RedTeleOp extends OpMode {
                     intakeOuter.setPower(-.8);
                     intakeInner.setPower(.4);
 
-                    if (distanceSensor.getDistance(DistanceUnit.CM) < 4){
+                    if (distanceSensor.getDistance(DistanceUnit.CM) < 10){
                         hood.setPosition(hood.getPosition() + .02);
                         ballsPassed++;
                     }
