@@ -58,7 +58,7 @@ public class AprilTagEasy extends LinearOpMode {
 
     // Simple smoothing - just remember last error
     private double lastError = 0;
-    private static final double SMOOTHING = 0.8; // Higher = smoother but slower
+    private static final double SMOOTHING = 0.65; // Higher = smoother but slower
 
     @Override
     public void runOpMode() {
@@ -118,7 +118,7 @@ public class AprilTagEasy extends LinearOpMode {
 
         // Move servos (counter-rotating)
         laxonPos = CENTER_POS + correction;
-        raxonPos = CENTER_POS - correction;
+        raxonPos = CENTER_POS + correction;
 
         // Keep in bounds
         laxonPos = Math.max(MIN_POS, Math.min(MAX_POS, laxonPos));
