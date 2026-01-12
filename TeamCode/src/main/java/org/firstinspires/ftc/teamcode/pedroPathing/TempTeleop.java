@@ -23,7 +23,7 @@ import java.util.function.Supplier;
 
 @Configurable
 @TeleOp
-public class TempTeleop extends OpMode {
+public class    TempTeleop extends OpMode {
     private Follower follower;
 
     private boolean debounceA;

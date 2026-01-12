@@ -26,171 +26,132 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package org.firstinspires.ftc.teamcode.pedroPathing;
-
-import static org.firstinspires.ftc.teamcode.pedroPathing.Tuning.follower;
 
 import com.bylazar.configurables.annotations.Configurable;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.LLResultTypes;
-import com.qualcomm.hardware.limelightvision.LLStatus;
-import com.qualcomm.hardware.limelightvision.Limelight3A;
-
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
-import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
-
 import java.util.List;
-import java.util.Locale;
 
-
-/*
- * This OpMode illustrates the basics of AprilTag recognition and pose estimation, using
- * the easy way.
- *
- * For an introduction to AprilTags, see the FTC-DOCS link below:
- * https://ftc-docs.firstinspires.org/en/latest/apriltag/vision_portal/apriltag_intro/apriltag-intro.html
- *
- * In this sample, any visible tag ID will be detected and displayed, but only tags that are included in the default
- * "TagLibrary" will have their position and orientation information displayed.  This default TagLibrary contains
- * the current Season's AprilTags and a small set of "test Tags" in the high number range.
- *
- * When an AprilTag in the TagLibrary is detected, the SDK provides location and orientation of the tag, relative to the camera.
- * This information is provided in the "ftcPose" member of the returned "detection", and is explained in the ftc-docs page linked below.
- * https://ftc-docs.firstinspires.org/apriltag-detection-values
- *
- * To experiment with using AprilTags to navigate, try out these two driving samples:
- * RobotAutoDriveToAprilTagOmni and RobotAutoDriveToAprilTagTank
- *
- * Hafza's comments:
- * all we really need are the Tx value and the YAW
- *Tx: for the PID loop that is gonna control servo power and rotation to align with the April tag
- *YAW: using botpose we can find roll, pitch, yaw, then use these degrees to see mounting orientation
- *  IT WILL BE FIELD CENTRIC THO!
- *positive Tx is left
- * for continuous power = error * kP
- */
 @Configurable
 @TeleOp(name = "AprilTagEasy")
 public class AprilTagEasy extends LinearOpMode {
 
-    // Change this to Limelight3A
     private Limelight3A limelight;
     private Servo raxon;
-
     private Servo laxon;
-    private double raxonPos;
-    private double laxonPos;
 
+    // Servo positions
+    private double raxonPos = 0.4889;
+    private double laxonPos = 0.4889;
+    private static final double CENTER_POS = 0.4889;
+    private static final double MIN_POS = 0.1894;
+    private static final double MAX_POS = 0.7594;
+
+    // Simple P controller (removed I and D)
+    private double kP = 0.003;
+
+    // Simple smoothing - just remember last error
+    private double lastError = 0;
+    private static final double SMOOTHING = 0.65; // Higher = smoother but slower
 
     @Override
     public void runOpMode() {
-
-        // Initialize Limelight BEFORE waitForStart()
-        raxon = hardwareMap.get(Servo.class,"raxon");
-        laxon = hardwareMap.get(Servo.class,"laxon");
-
+        raxon = hardwareMap.get(Servo.class, "raxon");
+        laxon = hardwareMap.get(Servo.class, "laxon");
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
-        limelight.setPollRateHz(100);
-        limelight.pipelineSwitch(0); // Switch to AprilTag pipeline
+
+        limelight.pipelineSwitch(0);
         limelight.start();
+
+        raxon.setPosition(CENTER_POS);
+        laxon.setPosition(CENTER_POS);
 
         waitForStart();
 
         while (opModeIsActive()) {
-
-            telemetryAprilTag();
-
-            raxon.setPosition(.6094);
-            laxon.setPosition(.6094);
-
-            // Push telemetry to the Driver Station.
+            track();
             telemetry.update();
-
-            // Share the CPU.
             sleep(20);
         }
 
-        // Save more CPU resources when camera is no longer needed.
         limelight.close();
+    }
 
-    }   // end method runOpMode()
-
-    private void telemetryAprilTag() {
-        // Check if limelight exists
-        if (limelight == null) {
-            telemetry.addData("Error", "Limelight not initialized");
-            return;
-        }
-
-        // Get results from Limelight (not AprilTagProcessor!)
+    private void track() {
         LLResult result = limelight.getLatestResult();
 
+        // No target? Do nothing
         if (result == null || !result.isValid()) {
-            telemetry.addData("Limelight", "No valid targets");
+            telemetry.addData("Status", "No target");
+            lastError = 0;
             return;
         }
 
-        // Get fiducial (AprilTag) results from Limelight
-        List<LLResultTypes.FiducialResult> fiducials = result.getFiducialResults();
-        telemetry.addData("# AprilTags Detected", fiducials.size());
-
-        // Step through the list of detections and display info for each one
-        for (LLResultTypes.FiducialResult fiducial : fiducials) {
-            telemetry.addLine(String.format(Locale.getDefault(),
-                    "\n==== (ID %d)", fiducial.getFiducialId()));
-
-            telemetry.addLine(String.format(Locale.getDefault(),
-                    "Target X: %.2f deg, Y: %.2f deg",
-                    fiducial.getTargetXDegrees(),
-                    fiducial.getTargetYDegrees()));
-
-            telemetry.addLine(String.format(Locale.getDefault(),
-                    "Robot Pose: X=%.2f, Y=%.2f, Z=%.2f",
-                    fiducial.getRobotPoseFieldSpace().getPosition().x,
-                    fiducial.getRobotPoseFieldSpace().getPosition().y,
-                    fiducial.getRobotPoseFieldSpace().getPosition().z));
-
-            double x = fiducial.getTargetXDegrees();
-            double y = fiducial.getTargetXDegrees();
-            double angleToRot = (limelight.getStatus().getFinalYaw()) - Math.toDegrees(Math.atan((138-y)/(138-x)));
-            laxonPos = .4889 + (.2705/90)*angleToRot;
-            raxonPos = .4889 + (.2705/90)*angleToRot;
-
-            if(raxonPos > 1)
-            {
-                raxonPos = 1;
-            }
-            if(raxonPos < .1894)
-            {
-                raxonPos = .1894;
-            }
-            if(laxonPos < .1894)
-            {
-                laxonPos = .1894;
-            }
-            if(laxonPos > 1)
-            {
-                laxonPos = 1;
-            }
-
-            raxon.setPosition(raxonPos);
-            laxon.setPosition(laxonPos);
-
-            telemetry.addData("raxon",raxon.getPosition());
-            telemetry.addData("laxon",laxon.getPosition());
-
+        List<LLResultTypes.FiducialResult> tags = result.getFiducialResults();
+        if (tags.isEmpty()) {
+            telemetry.addData("Status", "No AprilTags");
+            lastError = 0;
+            return;
         }
 
-        telemetry.addLine("\nNote: Using Limelight API for AprilTag detection");
+        // Get error from first tag
+        double rawError = tags.get(0).getTargetXDegrees();
 
-    }   // end method telemetryAprilTag()
+        // Smooth it out - blend with last error
+        double error = (SMOOTHING * lastError) + ((1 - SMOOTHING) * rawError);
+        lastError = error;
 
-}   // end class
+        // Ignore tiny errors
+        if (Math.abs(error) < 0.5) {
+            error = 0;
+        }
+
+        // Calculate correction
+        double correction = kP * error;
+        correction = Math.max(-0.05, Math.min(0.05, correction)); // Limit it
+
+        // Move servos (counter-rotating)
+        laxonPos = CENTER_POS + correction;
+        raxonPos = CENTER_POS + correction;
+
+        // Keep in bounds
+        laxonPos = Math.max(MIN_POS, Math.min(MAX_POS, laxonPos));
+        raxonPos = Math.max(MIN_POS, Math.min(MAX_POS, raxonPos));
+
+        if(raxonPos > 1)
+        {
+            raxonPos = 1;
+        }
+        if(raxonPos < .1894)
+        {
+            raxonPos = .1894;
+        }
+        if(laxonPos < .1894)
+        {
+            laxonPos = .1894;
+        }
+        if(laxonPos > 1)
+        {
+            laxonPos = 1;
+        }
+
+        laxon.setPosition(laxonPos);
+        raxon.setPosition(raxonPos);
+
+        // Show what's happening
+        telemetry.addData("Target ID", tags.get(0).getFiducialId());
+        telemetry.addData("Raw Error", "%.2f deg", rawError);
+        telemetry.addData("Smoothed", "%.2f deg", error);
+        telemetry.addData("Correction", "%.4f", correction);
+
+        if (Math.abs(error) < 0.5) {
+            telemetry.addLine("LOCKED ON");
+        }
+    }
+}
