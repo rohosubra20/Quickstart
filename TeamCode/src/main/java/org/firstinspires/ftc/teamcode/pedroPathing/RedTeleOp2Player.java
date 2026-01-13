@@ -583,6 +583,7 @@ public class RedTeleOp2Player extends OpMode {
         telemetry.addData("distance", distance);
         telemetry.addData("Distance Sensor", distanceSensor.getDistance(DistanceUnit.CM));
         telemetry.addData("gate", gate.getPosition() );
+        telemetry.addData("intakeVelocity", intakeVelocity);
 
     }
 }
