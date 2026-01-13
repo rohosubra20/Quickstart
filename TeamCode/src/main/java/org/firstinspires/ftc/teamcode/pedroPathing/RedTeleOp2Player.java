@@ -233,9 +233,14 @@ public class RedTeleOp2Player extends OpMode {
             {
                 gate.setPosition(0);
             }
+            dA = true;
         }
         if (gamepad1.right_bumper && !dRB1){
             intakeVelocity *= -1;
+            dRB1 = true;
+        }
+        if (!gamepad1.right_bumper){
+            dRB1 = false;
         }
 
         if(raxonPos > 1)
@@ -260,16 +265,16 @@ public class RedTeleOp2Player extends OpMode {
 
         if(!gamepad2.b){
 
-            dB = true;
+            dB = false;
         }
 
-        if (actiontimer.getElapsedTimeSeconds() > 4){
-            kickerpos = false;
-            blocker.setPosition(.3);
+        //if (actiontimer.getElapsedTimeSeconds() > 4){
+            //kickerpos = false;
+            //blocker.setPosition(.3);
 
 
 
-        }
+        //}
 //        if (gamepad2.b && dB && kickerpos){
 //            kickerpos = false;
 //            blocker.setPosition(.3);
@@ -279,12 +284,19 @@ public class RedTeleOp2Player extends OpMode {
 //
 //
 //        }
-        if (gamepad2.b && dB && !kickerpos){
+        if (gamepad2.b && !dB && !kickerpos){
             blocker.setPosition(.50 );
             kickerpos = true;
-            dB = false;
+            dB = true;
             actiontimer.resetTimer();
         }
+        if (gamepad2.b && !dB && kickerpos){
+            blocker.setPosition(.3);
+            kickerpos = false;
+            dB = true;
+            actiontimer.resetTimer();
+        }
+
 
         if (gamepad1.x && !intakeOn && !dX){
             dX = true;
@@ -298,6 +310,10 @@ public class RedTeleOp2Player extends OpMode {
             intakeOuter.setVelocity(0);
             intakeInner.setVelocity(0);
         }
+        if(!gamepad1.x)
+        {
+            dX = false;
+        }
 //        if (gamepad2.b && !feederOn && !debounceB){
 //            debounceB = true;
 //            feederOn = true;
@@ -307,32 +323,32 @@ public class RedTeleOp2Player extends OpMode {
 ////            feederR.setPower(1);
 //        }
 
-        if (gamepad2.left_bumper && dLB2){
+        if (gamepad2.left_bumper && !dLB2){
             hood.setPosition(hood.getPosition()-.05);
-            dLB2 = false;
+            dLB2 = true;
         }
         if(!gamepad2.left_bumper)
         {
-            dLB2 = true;
+            dLB2 = false;
         }
-        if (gamepad2.right_bumper && dRB2){
+        if (gamepad2.right_bumper && !dRB2){
             hood.setPosition(hood.getPosition()+.05);
-            dRB2 = false;
+            dRB2 = true;
         }
         if(!gamepad2.right_bumper)
         {
-            dRB2 = true;
+            dRB2 = false;
         }
 
-        if (gamepad2.guide && dG){
+        if (gamepad2.guide && !dG){
             //slowMode = !slowMode;
             autoTarget = !autoTarget;
             laxonPos = .3389;
             raxonPos = .3389;
-            dG = false;
-        }
-        if (!dG){
             dG = true;
+        }
+        if (!gamepad2.guide){
+            dG = false;
         }
 
 
@@ -348,14 +364,15 @@ public class RedTeleOp2Player extends OpMode {
 ////            feederR.setPower(0);
 //        }
 
-        if (gamepad2.x && !flywheelOn && !dX){
-            dX = true;
+        if (gamepad2.y && !flywheelOn && !dY){
+            dY = true;
             flywheelOn = true;
             flywheelLeft.setVelocity(flywheelVelocity);
             flywheelRight.setVelocity(flywheelVelocity);
         }
-        if (gamepad2.x && flywheelOn && !dX){
-            dX = true;
+        if (gamepad2.y && flywheelOn && !dY){
+
+            dY = true;
             flywheelOn = false;
             flywheelLeft.setPower(0);
             flywheelRight.setPower(0);
@@ -365,9 +382,17 @@ public class RedTeleOp2Player extends OpMode {
             intakeVelocity =+ 50;
             dLT1 = false;
         }
+        if(gamepad1.left_trigger < .01)
+        {
+            dLT1 = true;
+        }
         if (gamepad1.right_trigger > .01 && dRT1) {
             intakeVelocity -= 50;
             dRT1 = false;
+        }
+        if(gamepad1.right_trigger < .01)
+        {
+            dRT1 = true;
         }
         if (gamepad2.left_trigger > .01 && dLT2){
             raxonPos = raxon.getPosition() +.03;
@@ -453,13 +478,13 @@ public class RedTeleOp2Player extends OpMode {
         if(!gamepad2.dpad_down){
             debounce_dpad_down = false;
         }
-        if(gamepad2.y && dY)
-        {
-            autoTarget = !autoTarget;
-            laxonPos = .3389;
-            raxonPos = .3389;
-            dY = false;
-        }
+//        if(gamepad2.y && dY)
+//        {
+//            autoTarget = !autoTarget;
+//            laxonPos = .3389;
+//            raxonPos = .3389;
+//            dY = false;
+//        }
         if(!gamepad2.y)
         {
             dY = true;
