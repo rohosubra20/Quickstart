@@ -1,3 +1,4 @@
+
 package org.firstinspires.ftc.teamcode.pedroPathing;
 import android.net.EthernetNetworkSpecifier;
 
@@ -489,7 +490,7 @@ public class RedTeleOp extends OpMode {
             if (!slowMode) follower.setTeleOpDrive(
                     -gamepad1.left_stick_y,
                     -gamepad1.left_stick_x,
-                    -gamepad1.right_stick_x,
+                    gamepad1.right_stick_x,
                     true // Robot Centric
             );
 
@@ -537,3 +538,4 @@ public class RedTeleOp extends OpMode {
 
     }
 }
+
