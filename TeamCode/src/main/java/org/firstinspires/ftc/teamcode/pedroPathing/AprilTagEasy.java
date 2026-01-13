@@ -53,12 +53,12 @@ public class AprilTagEasy extends LinearOpMode {
     private static final double MIN_POS = 0.1894;
     private static final double MAX_POS = 0.7594;
 
-    // Simple P controller (removed I and D)
-    private double kP = 0.003;
+    // Increased P gain for faster response
+    private double kP = 0.008; // Increased from 0.003
 
-    // Simple smoothing - just remember last error
+    // Reduced smoothing for faster reaction
     private double lastError = 0;
-    private static final double SMOOTHING = 0.65; // Higher = smoother but slower
+    private static final double SMOOTHING = 0.3; // Reduced from 0.75 - less smooth but faster
 
     @Override
     public void runOpMode() {
@@ -77,7 +77,7 @@ public class AprilTagEasy extends LinearOpMode {
         while (opModeIsActive()) {
             track();
             telemetry.update();
-            sleep(20);
+            sleep(10); // speed up for fast updating
         }
 
         limelight.close();
@@ -103,20 +103,20 @@ public class AprilTagEasy extends LinearOpMode {
         // Get error from first tag
         double rawError = tags.get(0).getTargetXDegrees();
 
-        // Smooth it out - blend with last error
+        //blend with last error
         double error = (SMOOTHING * lastError) + ((1 - SMOOTHING) * rawError);
         lastError = error;
 
-        // Ignore tiny errors
-        if (Math.abs(error) < 0.5) {
+        //initial response
+        if (Math.abs(error) < 0.3) { // Reduced from 0.5
             error = 0;
         }
 
         // Calculate correction
         double correction = kP * error;
-        correction = Math.max(-0.05, Math.min(0.05, correction)); // Limit it
+        correction = Math.max(-0.15, Math.min(0.15, correction)); // Increased limit from 0.05 to 0.15
 
-        // Move servos (counter-rotating)
+        // Move servos
         laxonPos = CENTER_POS + correction;
         raxonPos = CENTER_POS + correction;
 
@@ -150,7 +150,7 @@ public class AprilTagEasy extends LinearOpMode {
         telemetry.addData("Smoothed", "%.2f deg", error);
         telemetry.addData("Correction", "%.4f", correction);
 
-        if (Math.abs(error) < 0.5) {
+        if (Math.abs(error) < 0.3) {
             telemetry.addLine("LOCKED ON");
         }
     }
