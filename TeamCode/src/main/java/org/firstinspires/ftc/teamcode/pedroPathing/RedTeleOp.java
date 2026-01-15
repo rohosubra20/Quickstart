@@ -61,7 +61,7 @@ public class RedTeleOp extends OpMode {
     private boolean automatedDrive;
     private Supplier<PathChain> pathChain;
 
-    private boolean autoTarget = true;
+    private boolean autoTarget = false;
     private TelemetryManager telemetryM;
     private boolean slowMode = false;
 
@@ -183,8 +183,8 @@ public class RedTeleOp extends OpMode {
         follower.startTeleopDrive();
         follower.setMaxPower(.8);
         blocker.setPosition(.3);
-        raxon.setPosition(.3389);
-        laxon.setPosition(.3389);
+        raxon.setPosition(.5);
+        laxon.setPosition(.5);
         hood.setPosition(.5694);
         imu.resetYaw();
         //Parallel: .4889
@@ -234,13 +234,13 @@ public class RedTeleOp extends OpMode {
         {
             raxonPos = 1;
         }
-        if(raxonPos < .1894)
+        if(raxonPos < 0)
        {
-            raxonPos = .1894;
+            raxonPos = 0;
         }
-        if(laxonPos < .1894)
+        if(laxonPos < 0)
         {
-            laxonPos = .1894;
+            laxonPos = 0;
         }
         if(laxonPos > 1)
         {
@@ -351,16 +351,16 @@ public class RedTeleOp extends OpMode {
         }
 
         if (gamepad1.left_trigger > .01 && debounceLEFT_TRIGGER){
-            raxonPos = raxon.getPosition() +.03;
-            laxonPos = laxon.getPosition() - .03;
+            raxonPos = raxon.getPosition() +.02;
+            laxonPos = laxon.getPosition() - .02;
             laxon.setPosition(laxonPos);
             raxon.setPosition(raxonPos);
 
             debounceLEFT_TRIGGER = false;
         }
         if (gamepad1.right_trigger > .01 && debounceRIGHT_TRIGGER){
-            raxonPos = raxon.getPosition() - .03;
-            laxonPos = laxon.getPosition() + .03;
+            raxonPos = raxon.getPosition() - .02;
+            laxonPos = laxon.getPosition() + .02;
             raxon.setPosition(raxonPos);
             laxon.setPosition(laxonPos);
             debounceRIGHT_TRIGGER = false;
