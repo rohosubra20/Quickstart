@@ -53,9 +53,9 @@ public class AprilTagEasy extends LinearOpMode {
     private Servo laxon;
 
     // Servo positions
-    private double raxonPos = 0.4889;
-    private double laxonPos = 0.4889;
-    private static final double CENTER_POS = 0.4889;
+    private double raxonPos = 0.3056;
+    private double laxonPos = 0.3056;
+    private static final double CENTER_POS = 0.3056;
     private static final double MIN_POS = 0.1894;
     private static final double MAX_POS = 0.7594;
 
