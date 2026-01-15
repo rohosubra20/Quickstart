@@ -385,7 +385,7 @@ public class AutonNearPrototype extends OpMode {
         opmodeTimer = new Timer();
         actionTimer = new Timer();
         opmodeTimer.resetTimer();
-        count = 1;
+        count = 0;
 
         follower = Constants.createFollower(hardwareMap);
         buildPaths();
