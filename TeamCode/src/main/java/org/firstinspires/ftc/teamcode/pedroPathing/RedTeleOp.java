@@ -40,6 +40,8 @@ public class RedTeleOp extends OpMode {
 
     private  Timer actiontimer;
 
+    private  Timer timerA;
+
     private Servo raxon;
 
     private  Servo gate;
@@ -100,6 +102,7 @@ public class RedTeleOp extends OpMode {
     private double laxonPos;
     private double slowModeMultiplier = 0.5;
     private double angleToRot;
+
 
     private PathChain parkingSpace, scoringSpot;
 
@@ -218,7 +221,7 @@ public class RedTeleOp extends OpMode {
 
 
 
-        //flywheelVelocity = .0701544 * Math.pow(distance,2) - 3.07502 * distance + 1626.87017;
+        flywheelVelocity = .0701544 * Math.pow(distance,2) - 3.07502 * distance + 1626.87017;
         //hood.setPosition(.259228 * Math.sin(.03483 * distance + .48236) + .752718);
         if (gamepad1.left_stick_button){
             gate.setPosition(0);
@@ -349,7 +352,7 @@ public class RedTeleOp extends OpMode {
 
         if (gamepad1.left_trigger > .01 && debounceLEFT_TRIGGER){
             raxonPos = raxon.getPosition() +.03;
-            laxonPos = laxon.getPosition() + .03;
+            laxonPos = laxon.getPosition() - .03;
             laxon.setPosition(laxonPos);
             raxon.setPosition(raxonPos);
 
@@ -357,7 +360,7 @@ public class RedTeleOp extends OpMode {
         }
         if (gamepad1.right_trigger > .01 && debounceRIGHT_TRIGGER){
             raxonPos = raxon.getPosition() - .03;
-            laxonPos = laxon.getPosition() - .03;
+            laxonPos = laxon.getPosition() + .03;
             raxon.setPosition(raxonPos);
             laxon.setPosition(laxonPos);
             debounceRIGHT_TRIGGER = false;
@@ -454,17 +457,22 @@ public class RedTeleOp extends OpMode {
             flywheelRight.setVelocity(flywheelVelocity);
             actiontimer.resetTimer();
             double OgHoodPos = hood.getPosition();
-            while (ballsPassed < 3 && actiontimer.getElapsedTimeSeconds() < 4){
+            while (ballsPassed < 3 && actiontimer.getElapsedTimeSeconds() < 6){
                 blocker.setPosition(5);
-                if (actiontimer.getElapsedTimeSeconds() >= 2){
+                if (actiontimer.getElapsedTimeSeconds() >= 4){
                     //loop through balls here
                     intakeOuter.setPower(-.8);
                     intakeInner.setPower(.4);
 
                     if (distanceSensor.getDistance(DistanceUnit.CM) < 10 && debounceSensor){
-                        hood.setPosition(hood.getPosition() + .02);
+                        timerA.resetTimer();
+                        while (timerA.getElapsedTimeSeconds() < .2){
+
+                        }
+                        hood.setPosition(hood.getPosition() + .05);
                         ballsPassed++;
                         debounceSensor = false;
+
 
 
                     }
@@ -479,6 +487,9 @@ public class RedTeleOp extends OpMode {
             blocker.setPosition(.3);
             intakeOuter.setPower(0);
             intakeInner.setPower(0);
+            flywheelLeft.setVelocity(-1);
+            flywheelRight.setVelocity(-1);
+            hood.setPosition(OgHoodPos);
 
 
         }
@@ -496,9 +507,9 @@ public class RedTeleOp extends OpMode {
 
             //This is the normal version to use in the TeleOp
             if (!slowMode) follower.setTeleOpDrive(
-                    -gamepad1.left_stick_y,
-                    -gamepad1.left_stick_x,
-                    gamepad1.right_stick_x,
+                    -gamepad1.left_stick_y , 
+                    -gamepad1.left_stick_x ,
+                    -gamepad1.right_stick_x,
                     true // Robot Centric
             );
 
