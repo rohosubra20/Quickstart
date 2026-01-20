@@ -29,10 +29,13 @@ import java.util.function.Supplier;
 public class RedTeleOp2Player extends OpMode {
     private Follower follower;
 
+    private boolean readyToRotate;
     private boolean debounceA;
     private Timer pathTimer;
 
     private  Timer actiontimer;
+
+    private  Timer aTimer;
 
     private Servo raxon;
 
@@ -159,11 +162,13 @@ public class RedTeleOp2Player extends OpMode {
         dLB2 = false;
         dRB1 = false;
 
-
+        aTimer = new Timer();
         actiontimer = new Timer();
 
         raxon = hardwareMap.get(Servo.class,"raxon");
         laxon = hardwareMap.get(Servo.class,"laxon");
+        laxon.setDirection(Servo.Direction.FORWARD);
+        raxon.setDirection(Servo.Direction.FORWARD);
 
 
         pathChain = () -> follower.pathBuilder() //Lazy Curve Generation
@@ -185,8 +190,8 @@ public class RedTeleOp2Player extends OpMode {
         follower.startTeleopDrive();
         follower.setMaxPower(.8);
         blocker.setPosition(.3);
-        raxon.setPosition(.3389);
-        laxon.setPosition(.3389);
+        raxon.setPosition(.5);
+        laxon.setPosition(.5);
         hood.setPosition(.5694);
         imu.resetYaw();
         //Parallel: .4889
@@ -203,13 +208,20 @@ public class RedTeleOp2Player extends OpMode {
 
 
 
-        if(autoTarget)
+
+
+        if(autoTarget && aTimer.getElapsedTime() > 500)
         {
+
+
             x = follower.getPose().getX();
             y = follower.getPose().getY();
             angleToRot = (imu.getRobotYawPitchRollAngles().getYaw()) - Math.toDegrees(Math.atan((138-y)/(138-x)));
             laxonPos = .4889 + (.2705/90)*angleToRot;
             raxonPos = .4889 + (.2705/90)*angleToRot;
+            raxon.setPosition(raxonPos);
+            laxon.setPosition(laxonPos);
+            aTimer.resetTimer();
         }
 
 
@@ -249,8 +261,7 @@ public class RedTeleOp2Player extends OpMode {
             laxonPos = 1;
         }
 
-        raxon.setPosition(raxonPos);
-        laxon.setPosition(laxonPos);
+
 
         if(!gamepad2.b){
 
@@ -439,8 +450,8 @@ public class RedTeleOp2Player extends OpMode {
         if(gamepad2.y && debounceY)
         {
             autoTarget = !autoTarget;
-            laxonPos = .3389;
-            raxonPos = .3389;
+            laxonPos = .5;
+            raxonPos = .5;
             debounceY = false;
         }
         if(!gamepad2.y)
