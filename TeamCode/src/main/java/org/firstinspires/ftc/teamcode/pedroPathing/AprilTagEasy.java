@@ -49,13 +49,11 @@ public class AprilTagEasy extends LinearOpMode {
     private Limelight3A limelight;
     private Servo raxon;
     private Servo laxon;
-
-    // Servo positions
     private double raxonPos = .3389;
     private double laxonPos = .3389;
     private static final double CENTER_POS = .3389;
     private static final double MIN_POS = 0.1894;
-    private static final double MAX_POS = .9859;
+    private static final double MAX_POS = 1;
     private double kP = 0.008;
 
     private double lastError = 0;
@@ -89,16 +87,13 @@ public class AprilTagEasy extends LinearOpMode {
         if (result == null || !result.isValid()) {
             telemetry.addData("Status", "No target");
             lastError = 0;
-            return;
         }
 
         List<LLResultTypes.FiducialResult> tags = result.getFiducialResults();
 
         if (tags.isEmpty()) {
-            telemetry.addData("No AprilTags",
-                    "");
+            telemetry.addData("No AprilTags", "");
             lastError = 0;
-            return;
         }
 
         double rawError = tags.get(0).getTargetXDegrees();
