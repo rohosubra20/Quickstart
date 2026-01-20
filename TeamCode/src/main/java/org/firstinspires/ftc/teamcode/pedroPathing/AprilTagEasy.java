@@ -51,15 +51,15 @@ public class AprilTagEasy extends LinearOpMode {
     private Servo laxon;
 
     // Servo positions
-    private double raxonPos = 0.3056;
-    private double laxonPos = 0.3056;
-    private static final double CENTER_POS = 0.3056;
+    private double raxonPos = .3389;
+    private double laxonPos = .3389;
+    private static final double CENTER_POS = .3389;
     private static final double MIN_POS = 0.1894;
     private static final double MAX_POS = .9859;
     private double kP = 0.008;
 
     private double lastError = 0;
-    private static final double s = 0.5;
+    private static final double s = 0.75;
 
     @Override
     public void runOpMode() {
@@ -77,7 +77,7 @@ public class AprilTagEasy extends LinearOpMode {
         while (opModeIsActive()) {
             track();
             telemetry.update();
-            sleep(10);
+            sleep(30);
         }
 
         limelight.close();
