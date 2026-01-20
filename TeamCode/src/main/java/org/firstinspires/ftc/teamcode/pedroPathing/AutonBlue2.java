@@ -55,9 +55,15 @@ public class AutonBlue2 extends OpMode {
 
     private final Pose pickup3C2Pose = new Pose(49,94, Math.toRadians(0));
 
+    private final Pose pickup4Pose = new Pose(10,9,Math.toRadians(0));
+
+    private final Pose pickup4CPose = new Pose(36,6,Math.toRadians(0));
+
+    private final Pose pickup4C2Pose = new Pose(67,77,Math.toRadians(0));
+
     private Path scorePreload;
 
-    private PathChain grabPickup1, scorePickup1, grabPickup2, scorePickup2, grabPickup3, grabPickup4, grabPickup5, scorePickup3 ;
+    private PathChain grabPickup1, scorePickup1, grabPickup2, scorePickup2, grabPickup3, grabPickup4, scorePickup4, scorePickup3 ;
 
     private Servo kicker;
 
@@ -176,6 +182,16 @@ public class AutonBlue2 extends OpMode {
                 .addPath(new BezierCurve(pickup3Pose, pickup3C2Pose, scorePose))
                 .setTangentHeadingInterpolation()
                 .build();
+
+        grabPickup4 = follower.pathBuilder()
+                .addPath(new BezierCurve(scorePose, pickup4CPose, pickup4Pose))
+                .setTangentHeadingInterpolation()
+                .build();
+
+        scorePickup4 = follower.pathBuilder()
+                .addPath(new BezierCurve(pickup4Pose, pickup4C2Pose, scorePose))
+                .setTangentHeadingInterpolation()
+                .build();
     }
 
     public void autonomousPathUpdate() {
@@ -243,6 +259,12 @@ public class AutonBlue2 extends OpMode {
 
                         }
                         else if(count == 4)
+                        {
+                            follower.followPath(grabPickup4);
+                            setPathState(State.PICKUP4);
+                            count++;
+                        }
+                        else if(count == 5)
                         {
                             follower.followPath(grabPickup1);
                             setPathState(State.END);
@@ -313,13 +335,13 @@ public class AutonBlue2 extends OpMode {
 
                 }
                 break;
-//            case PICKUP4:
-//                if(!follower.isBusy()){
-//
-//                    follower.followPath(grabPickup5);
-//                    setPathState(State.PICKUP5);
-//                }
-//                break;
+            case PICKUP4:
+                if(!follower.isBusy()){
+
+                    follower.followPath(scorePickup4);
+                    setPathState(State.SCORING);
+                }
+                break;
 //            case PICKUP5:
 //                if(!follower.isBusy()){
 //
