@@ -155,7 +155,7 @@ public class RedTeleOp extends OpMode {
         hood = hardwareMap.get(Servo.class, "hood");
         blocker = hardwareMap.get(Servo.class, "blocker");
         GREEN = .5;
-        RED = 0.1;
+        RED = 0.25;
         flywheelVelocity = 1800;
         intakeOn = false;
         flywheelOn = false;
@@ -217,16 +217,22 @@ public class RedTeleOp extends OpMode {
 
         if(autoTarget)
         {
+
             x = follower.getPose().getX();
             y = follower.getPose().getY();
+            distance = Math.sqrt(Math.pow(144-y,2) + Math.pow(144-x,2));
+            /*
             angleToRot = (imu.getRobotYawPitchRollAngles().getYaw()) - Math.toDegrees(Math.atan((138-y)/(138-x)));
             laxonPos = .49 + (.2705/90)*angleToRot; //if not work subtract laxon and act raxon
             raxonPos = .48 + (.2705/90)*angleToRot;
             raxon.setPosition(raxonPos);
             laxon.setPosition(laxonPos);
+             */
+
+
         }
 
-        distance = Math.sqrt(Math.pow(144-y,2) + Math.pow(144-x,2));
+
 
 
 
@@ -270,10 +276,7 @@ public class RedTeleOp extends OpMode {
         //raxon.setPosition(raxonPos);
         //laxon.setPosition(laxonPos);
 
-        if(!gamepad1.back){
 
-            debounceBACK = true;
-        }
 
 
         if (gamepad1.back && debounceBACK && kickerpos){
@@ -281,7 +284,6 @@ public class RedTeleOp extends OpMode {
             blocker.setPosition(.3);
             debounceBACK = false;
             indicatorLight1.setPosition(RED);
-
             indicatorLight2.setPosition(RED);
 
         }
@@ -292,6 +294,11 @@ public class RedTeleOp extends OpMode {
             indicatorLight1.setPosition(GREEN);
             indicatorLight1.setPosition(GREEN);
             actiontimer.resetTimer();
+        }
+
+        if(!gamepad1.back){
+
+            debounceBACK = true;
         }
 
         if (gamepad1.a && !intakeOn && !debounceA){
