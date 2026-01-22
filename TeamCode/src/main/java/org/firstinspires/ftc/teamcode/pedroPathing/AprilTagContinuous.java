@@ -44,28 +44,24 @@ import java.util.List;
 @TeleOp(name = "AprilTagContinuous")
 public class AprilTagContinuous extends LinearOpMode {
 
-    private Limelight3A limelight;
-    private CRServo raxon;
-    private CRServo laxon;
-    private AnalogInput axonEncoder;
+     Limelight3A limelight;
+     CRServo raxon;
+     CRServo laxon;
+    AnalogInput axonEncoder;
 
-    private static final double ENCODER_VOLTAGE_MIN = 0.0;
-    private static final double ENCODER_VOLTAGE_MAX = 3.3;
-    private static final double ENCODER_DEGREES_PER_VOLT = 360.0 / 3.3; //need to adj
-
-    private double kP = 0.015;
-    private double kD = 0.003;
-
-    // Control parameters
-    private double lastError = 0;
-    private static final double SMOOTHING = 0.3;
-    private static final double DEADZONE = 1.0;
-    private static final double MAX_POWER = 0.6;
-    private static final double MIN_POWER = 0.1;
+    double ENCODER_VOLTAGE_MIN = 0.0;
+    double ENCODER_VOLTAGE_MAX = 3.3;
+    double ENCODER_DEGREES_PER_VOLT = 360.0 / 3.3; //need to adj
+    double kP = 0.015;
+    double kD = 0.003;
+    double lastError = 0;
+    double SMOOTHING = 0.3;
+    double DEADZONE = 1.0;
+    double MAX_POWER = 0.6;
+    double MIN_POWER = 0.1;
 
     @Override
     public void runOpMode() {
-        // Initialize hardware
         raxon = hardwareMap.get(CRServo.class, "raxon");
         laxon = hardwareMap.get(CRServo.class, "laxon");
         axonEncoder = hardwareMap.get(AnalogInput.class, "axonEncoder");
@@ -74,7 +70,6 @@ public class AprilTagContinuous extends LinearOpMode {
         limelight.pipelineSwitch(1);
         limelight.start();
 
-        // Stop servos initially
         raxon.setPower(0);
         laxon.setPower(0);
 
