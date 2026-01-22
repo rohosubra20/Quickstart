@@ -40,6 +40,8 @@ public class RedTeleOp extends OpMode {
     private double GREEN;
     private Follower follower;
 
+    private Servo gate;
+    private boolean macroActive;
     private boolean debounceA;
     private Timer pathTimer;
 
@@ -49,7 +51,6 @@ public class RedTeleOp extends OpMode {
 
     private Servo raxon;
 
-    private  Servo gate;
     private Servo laxon;
     private Servo blocker;
     private Servo hood;
@@ -191,6 +192,7 @@ public class RedTeleOp extends OpMode {
         //The parameter controls whether the Follower should use break mode on the motors (using it is recommended).
         //In order to use float mode, add .useBrakeModeInTeleOp(true); to your Drivetrain Constants in Constant.java (for Mecanum)
         //If you don't pass anything in, it uses the default (false)
+        gate.setPosition(.5);
         follower.startTeleopDrive();
         follower.setMaxPower(.8);
         blocker.setPosition(.3);
@@ -220,8 +222,8 @@ public class RedTeleOp extends OpMode {
             x = follower.getPose().getX();
             y = follower.getPose().getY();
             distance = Math.sqrt(Math.pow(144-y,2) + Math.pow(144-x,2));
-            flywheelVelocity = 8.87 * (distance) + 1052;
-            hood.setPosition((-.00554324 * distance + .9108));
+            flywheelVelocity = 8.87 * (distance) + 1000;
+            hood.setPosition((-.00554324 * distance + .89));
 
             /*
             angleToRot = (imu.getRobotYawPitchRollAngles().getYaw()) - Math.toDegrees(Math.atan((138-y)/(138-x)));
@@ -253,12 +255,7 @@ public class RedTeleOp extends OpMode {
 
         //flywheelVelocity = .0701544 * Math.pow(distance,2) - 3.07502 * distance + 1200;
         //hood.setPosition(.259228 * Math.sin(.03483 * distance + .48236) + .752718);
-        if (gamepad1.left_stick_button){
-            gate.setPosition(0);
-        }
-        if ( gamepad1.right_stick_button){
-            gate.setPosition(.2);
-        }
+
 
         if(raxonPos > 1)
         {
@@ -296,7 +293,7 @@ public class RedTeleOp extends OpMode {
             kickerpos = true;
             debounceBACK = false;
             indicatorLight1.setPosition(GREEN);
-            indicatorLight1.setPosition(GREEN);
+            indicatorLight2.setPosition(GREEN);
             actiontimer.resetTimer();
         }
 
@@ -344,7 +341,7 @@ public class RedTeleOp extends OpMode {
         }
 
         if (gamepad1.guide && debounceGUIDE){
-            slowMode = !slowMode;
+
             debounceGUIDE = false;
             follower.setHeading(Math.toRadians(45));
         }
@@ -424,15 +421,11 @@ public class RedTeleOp extends OpMode {
 
         if(gamepad1.dpad_left && debounceDL)
         {
-            //laxonPos = laxon.getPosition() + .005;
-            //laxon.setPosition(laxonPos);
-            debounceDL = false;
+            gate.setPosition(gate.getPosition() + .03);
         }
         if(gamepad1.dpad_right && debounceDR)
         {
-            //laxonPos = laxon.getPosition() - .005;
-            //laxon.setPosition(laxonPos);
-            debounceDR = false;
+            gate.setPosition(gate.getPosition() - .03);
         }
         if(!gamepad1.dpad_left)
         {
@@ -469,8 +462,8 @@ public class RedTeleOp extends OpMode {
         if(gamepad1.y && debounceY)
         {
             autoTarget = !autoTarget;
-            laxonPos = .3389;
-            raxonPos = .3389;
+            laxonPos = .5;
+            raxonPos = .5;
             debounceY = false;
         }
         if(!gamepad1.y)
@@ -479,52 +472,29 @@ public class RedTeleOp extends OpMode {
         }
 
         if(gamepad1.start && debounceStart){
-          //code here!
-            blocker.setPosition(.3);
-            debounceStart = false;
-            ballsPassed = 0;
-            flywheelOn = true;
-            boolean debounceSensor = true;
-            flywheelLeft.setVelocity(flywheelVelocity);
-            flywheelRight.setVelocity(flywheelVelocity);
+            macroActive = true;
             actiontimer.resetTimer();
-            double OgHoodPos = hood.getPosition();
-            while (ballsPassed < 3 && actiontimer.getElapsedTimeSeconds() < 6){
-                blocker.setPosition(5);
-                if (actiontimer.getElapsedTimeSeconds() >= 4){
-                    //loop through balls here
-                    intakeOuter.setPower(-.8);
-                    intakeInner.setPower(.4);
-
-                    if (distanceSensor.getDistance(DistanceUnit.CM) < 10 && debounceSensor){
-                        timerA.resetTimer();
-                        while (timerA.getElapsedTimeSeconds() < .2){
-
-                        }
-                        hood.setPosition(hood.getPosition() + .05);
-                        ballsPassed++;
-                        debounceSensor = false;
-
-
-
-                    }
-                    else if (distanceSensor.getDistance(DistanceUnit.CM) > 10 ){
-                        debounceSensor = true;
-                    }
-
-
-                }
-
-            }
-            blocker.setPosition(.3);
-            intakeOuter.setPower(0);
-            intakeInner.setPower(0);
-            flywheelLeft.setVelocity(-1);
-            flywheelRight.setVelocity(-1);
-            hood.setPosition(OgHoodPos);
-
 
         }
+
+
+
+
+        if (actiontimer.getElapsedTime() < 3000 && macroActive) {
+
+
+            indicatorLight1.setPosition(GREEN);
+            blocker.setPosition(.50);
+            intakeOuter.setVelocity(-800);
+            intakeInner.setVelocity(400);
+        } else if (actiontimer.getElapsedTime() > 3000 && macroActive) {
+            indicatorLight1.setPosition(RED);
+            blocker.setPosition(.3);
+            intakeOuter.setVelocity(-.01);
+            intakeInner.setPower(-.01);
+            macroActive = false;
+        }
+
         if(!gamepad1.start){
             debounceStart = true;
         }
@@ -541,7 +511,7 @@ public class RedTeleOp extends OpMode {
             if (!slowMode) follower.setTeleOpDrive(
                     -gamepad1.left_stick_y , 
                     -gamepad1.left_stick_x ,
-                    -gamepad1.right_stick_x,
+                    -gamepad1.right_stick_x * .25,
                     true // Robot Centric
             );
 
@@ -588,6 +558,7 @@ public class RedTeleOp extends OpMode {
         telemetry.addData("Distance Sensor", distanceSensor.getDistance(DistanceUnit.CM));
         telemetry.addData("gate", gate.getPosition() );
         telemetry.addData("balls shot this burst" ,ballsPassed );
+        telemetry.addData("heading according to pedro" , follower.getHeading());
 
     }
 }
