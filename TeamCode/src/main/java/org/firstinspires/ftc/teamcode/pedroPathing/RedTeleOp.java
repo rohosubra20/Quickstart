@@ -334,14 +334,11 @@ public class RedTeleOp extends OpMode {
         }
 
         if (gamepad1.guide && debounceGUIDE){
-            pathChain = () -> follower.pathBuilder()
-                    .addPath(new Path(new BezierLine(follower::getPose, new Pose(follower.getPose().getX(), follower.getPose().getY()))))
-                    .setHeadingInterpolation(HeadingInterpolator.linearFromPoint(follower::getHeading, Math.toRadians(45), 0.3))
-                    .build();
-            automatedDrive = true;
+
+
             //
 
-            follower.followPath(pathChain.get());
+            follower.turnTo(Math.toRadians(45));
             debounceGUIDE = false;
 
         }
