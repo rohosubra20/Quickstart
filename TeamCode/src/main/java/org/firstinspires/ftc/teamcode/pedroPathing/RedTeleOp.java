@@ -156,7 +156,7 @@ public class RedTeleOp extends OpMode {
         blocker = hardwareMap.get(Servo.class, "blocker");
         GREEN = .5;
         RED = 0.25;
-        flywheelVelocity = 1800;
+        flywheelVelocity = 1600;
         intakeOn = false;
         flywheelOn = false;
         feederOn = false;
