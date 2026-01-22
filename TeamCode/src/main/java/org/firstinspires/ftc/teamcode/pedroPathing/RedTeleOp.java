@@ -342,10 +342,10 @@ public class RedTeleOp extends OpMode {
 
             follower.turnTo(Math.toRadians(45));
             debounceGUIDE = false;
-            driveState = false;
+            driveState = true;
             timerA.resetTimer();
         }
-        if (driveState && timerA.getElapsedTimeSeconds() > .4){
+        if (driveState && timerA.getElapsedTimeSeconds() > .5){
             follower.startTeleopDrive();
             driveState = false;
         }
