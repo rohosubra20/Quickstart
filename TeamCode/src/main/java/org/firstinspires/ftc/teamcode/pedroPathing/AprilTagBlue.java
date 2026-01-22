@@ -1,3 +1,6 @@
+
+
+
 /* Copyright (c) 2023 FIRST. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -40,47 +43,40 @@ import com.qualcomm.robotcore.hardware.Servo;
 import java.util.List;
 
 @Configurable
-@TeleOp(name = "RedTeleOp")
+@TeleOp(name = "AprilTagBlue")
 public class AprilTagBlue extends LinearOpMode {
 
     private Limelight3A limelight;
     private Servo raxon;
     private Servo laxon;
+    private double raxonPos = .5;
+    private double laxonPos = .5;
 
-    private double raxonPos = .3389;
-    private double laxonPos = .3389;
-
-    private static final double CENTER_POS = .3389;
+    private static final double CENTER_POS = .5;
     private static final double MIN_POS = 0.1894;
-    private static final double MAX_POS = 1.0;
-
+    private static final double MAX_POS = 1;
     private double kP = 0.003;
+
     private double lastError = 0;
-    private static final double SMOOTHING = 0.5;
-    private static final double kys = 1.2;
+    private static final double s = 0.4;
 
     @Override
     public void runOpMode() {
         raxon = hardwareMap.get(Servo.class, "raxon");
         laxon = hardwareMap.get(Servo.class, "laxon");
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
-
         limelight.pipelineSwitch(1);
         limelight.start();
 
         raxon.setPosition(CENTER_POS);
         laxon.setPosition(CENTER_POS);
 
-        telemetry.addLine("Ready to track AprilTags");
-        telemetry.addLine("Turret centered at starting position");
-        telemetry.update();
-
         waitForStart();
 
         while (opModeIsActive()) {
             track();
             telemetry.update();
-            sleep(25);
+            sleep(20);
         }
 
         limelight.close();
@@ -90,49 +86,53 @@ public class AprilTagBlue extends LinearOpMode {
         LLResult result = limelight.getLatestResult();
 
         if (result == null || !result.isValid()) {
-            telemetry.addData("Status", "No valid camera result");
+            telemetry.addData("Status", "No target");
             lastError = 0;
-            return;
-        }
-
-        List<LLResultTypes.FiducialResult> tags = result.getFiducialResults();
-
-        if (tags.isEmpty()) {
-            telemetry.addData("Status", "No AprilTags detected");
-            lastError = 0;
-            return;
-        }
-
-        double rawError = tags.get(0).getTargetXDegrees();
-
-        double error = (SMOOTHING * lastError) + ((1 - SMOOTHING) * rawError);
-        lastError = error;
-
-        if (Math.abs(error) < kys) {
-            error = 0;
-        }
-
-        // Calculate correction amount
-        double correction = kP * error;
-        correction = Math.max(-0.08, Math.min(0.08, correction));
-
-        laxonPos = CENTER_POS + correction;
-        raxonPos = CENTER_POS + correction;
-        //laxonPos = Math.max(MIN_POS, Math.min(MAX_POS, laxonPos));
-        //raxonPos = Math.max(MIN_POS, Math.min(MAX_POS, raxonPos));
-        laxon.setPosition(laxonPos);
-        raxon.setPosition(raxonPos);
-
-        telemetry.addData("Target ID", tags.get(0).getFiducialId());
-        telemetry.addData("Raw Error", "%.2f°", rawError);
-        telemetry.addData("Smoothed Error", "%.2f°", error);
-        telemetry.addData("Correction", "%.4f", correction);
-        telemetry.addData("Servo Position", "%.4f", laxonPos);
-
-        if (Math.abs(error) < kys) {
-            telemetry.addLine("✓ LOCKED ON TARGET");
         } else {
-            telemetry.addData("Tracking...", "Error: %.1f°", error);
+
+
+            List<LLResultTypes.FiducialResult> tags = result.getFiducialResults();
+
+            if (tags.isEmpty()) {
+                telemetry.addData("No AprilTags", "");
+                lastError = 0;
+            }
+
+            double rawError = tags.get(0).getTargetXDegrees();
+
+            double error = (s * lastError) + ((1 - s) * rawError);
+            lastError = error;
+
+            if (Math.abs(error) < 0.3) {
+                error = 0;
+            }
+
+            // Calculate correction
+            double correction = kP * error;
+            correction = Math.max(-0.15, Math.min(0.15, correction));
+
+
+            laxonPos = CENTER_POS + correction;
+            raxonPos = CENTER_POS + correction;
+            //laxonPos = Math.max(MIN_POS, Math.min(MAX_POS, laxonPos));
+           // raxonPos = Math.max(MIN_POS, Math.min(MAX_POS, raxonPos));
+
+            laxon.setPosition(laxonPos);
+            raxon.setPosition(raxonPos);
+
+            telemetry.addData("Laxon:  ","%.2f deg", raxonPos);
+            telemetry.addData("Smoothening:  ","%.2f deg", s);
+            telemetry.addData("Target ID", tags.get(0).getFiducialId());
+            telemetry.addData("Raxon:  ","%.2f deg", raxonPos);
+            telemetry.addData("Laxon:  ","%.2f deg", raxonPos);
+            telemetry.addData("Raw Error:  ", "%.2f deg", rawError);
+            telemetry.addData("error corrected:  ", "%.2f deg", error);
+            telemetry.addData("Correction:  ", "%.4f", correction);
+            telemetry.addData("DesiredPos:  ", .5 + correction);
+
+            if (Math.abs(error) < 0.3) {
+                telemetry.addLine("LOCKED ON");
+            }
         }
     }
 }
