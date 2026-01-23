@@ -345,9 +345,10 @@ public class RedTeleOp extends OpMode {
             driveState = true;
             timerA.resetTimer();
         }
-        if (!follower.isBusy()){
+        if (gamepad1.guide && !driveState && debounceGUIDE){
             follower.startTeleopDrive();
-            driveState = false;
+            driveState = true;
+            debounceGUIDE = false;
         }
 
 
