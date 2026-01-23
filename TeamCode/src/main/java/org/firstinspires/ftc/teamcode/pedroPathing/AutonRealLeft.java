@@ -201,7 +201,7 @@ public class AutonRealLeft extends OpMode {
             case START:
                 flywheelLeft.setVelocity(1700);
                 flywheelRight.setVelocity(1700);
-                hood.setPosition(.55);
+                hood.setPosition(.50);
 
                 follower.setMaxPower(0.8);
                 follower.followPath(scorePreload);
