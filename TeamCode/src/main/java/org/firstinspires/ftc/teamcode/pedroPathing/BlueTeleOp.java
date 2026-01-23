@@ -335,7 +335,7 @@ public class BlueTeleOp extends OpMode {
             debounceRB = true;
         }
 
-        if (gamepad1.guide && driveState && debounceGUIDE){
+        if (gamepad1.guide){
 
 
             //
@@ -345,7 +345,7 @@ public class BlueTeleOp extends OpMode {
             driveState = false;
 
         }
-        if (gamepad1.guide && !driveState && debounceGUIDE){
+        if (!gamepad1.guide && !driveState){
             follower.startTeleopDrive();
             driveState = true;
             debounceGUIDE = false;
