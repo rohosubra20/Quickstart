@@ -43,13 +43,13 @@ public class AprilTagContinuous extends LinearOpMode {
     public void runOpMode() {
         Servo raxon = hardwareMap.get(Servo.class, "raxon");
         Servo laxon = hardwareMap.get(Servo.class, "laxon");
-        AnalogInput encoder = hardwareMap.get(AnalogInput.class, "axonEncoder");
+        AnalogInput encoder = hardwareMap.get(AnalogInput.class, "absEncoder");
         Limelight3A limelight = hardwareMap.get(Limelight3A.class, "limelight");
 
         limelight.pipelineSwitch(1);
         limelight.start();
 
-        double pos = 0.34;
+        double pos = 0.5;
         double lastError = 0;
         raxon.setPosition(pos);
         laxon.setPosition(pos);
@@ -64,7 +64,7 @@ public class AprilTagContinuous extends LinearOpMode {
 
                 if (Math.abs(error) > 1.0) {
                     double derivative = error - lastError;
-                    double correction = (error * 0.003) - (derivative * 0.001);
+                    double correction = (error * 0.004) - (derivative * 0.003);
                     lastError = error;
 
                     pos += Math.max(-0.02, Math.min(0.02, correction));
