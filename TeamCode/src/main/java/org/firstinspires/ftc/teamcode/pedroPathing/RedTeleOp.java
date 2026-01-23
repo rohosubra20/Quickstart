@@ -342,7 +342,7 @@ public class RedTeleOp extends OpMode {
 
             follower.turnTo(Math.toRadians(45));
             debounceGUIDE = false;
-            driveState = true;
+            driveState = false;
 
         }
         if (gamepad1.guide && !driveState && debounceGUIDE){
