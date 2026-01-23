@@ -242,8 +242,8 @@ public class AutonRealRight extends OpMode {
 
                         //IntakeInner.setVelocity(0);
                         //IntakeOuter.setVelocity(0);
-                        flywheelLeft.setVelocity(-.01);
-                        flywheelRight.setVelocity(-.01);
+//                        flywheelLeft.setVelocity(-.01);
+//                        flywheelRight.setVelocity(-.01);
                         if (count == 1) {
 
                             follower.followPath(grabPickup1, true);
