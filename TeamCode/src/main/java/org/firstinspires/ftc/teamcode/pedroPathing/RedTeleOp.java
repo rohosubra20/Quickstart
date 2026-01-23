@@ -342,7 +342,7 @@ public class RedTeleOp extends OpMode {
 
             follower.turnTo(Math.toRadians(45));
             debounceGUIDE = false;
-            driveState = true;
+            driveState = false;
 
         }
         if (!gamepad1.guide){
@@ -388,16 +388,16 @@ public class RedTeleOp extends OpMode {
         }
 
         if (gamepad1.left_trigger > .01 && debounceLEFT_TRIGGER){
-            raxonPos = raxon.getPosition() +.03;
-            laxonPos = laxon.getPosition() - .03;
+            raxonPos = raxon.getPosition() -.02;
+            laxonPos = laxon.getPosition() - .02;
             laxon.setPosition(laxonPos);
             raxon.setPosition(raxonPos);
 
             debounceLEFT_TRIGGER = false;
         }
         if (gamepad1.right_trigger > .01 && debounceRIGHT_TRIGGER){
-            raxonPos = raxon.getPosition() - .03;
-            laxonPos = laxon.getPosition() + .03;
+            raxonPos = raxon.getPosition() + .02;
+            laxonPos = laxon.getPosition() + .02;
             raxon.setPosition(raxonPos);
             laxon.setPosition(laxonPos);
             debounceRIGHT_TRIGGER = false;
@@ -516,7 +516,11 @@ public class RedTeleOp extends OpMode {
             //In case the drivers want to use a "slowMode" you can scale the vectors
 
             //This is the normal version to use in the TeleOp
-            if (!slowMode) follower.setTeleOpDrive(
+            //Use this for the slower turning!!!! 144>y>sqrt{x^{2}}+72
+            if (!slowMode)
+
+                if
+                follower.setTeleOpDrive(
                     -gamepad1.left_stick_y , 
                     -gamepad1.left_stick_x ,
                     -gamepad1.right_stick_x * .25,
