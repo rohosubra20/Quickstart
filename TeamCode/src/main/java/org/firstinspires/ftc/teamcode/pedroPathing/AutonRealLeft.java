@@ -82,7 +82,7 @@ public class AutonRealLeft extends OpMode {
         SCORING,
         END
 
-    }
+    }//
 
     State state = State.START;
     public void buildPaths() {
