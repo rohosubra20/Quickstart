@@ -211,7 +211,7 @@ public class AutonBlue2 extends OpMode {
             case START:
                 flywheelLeft.setVelocity(1700);
                 flywheelRight.setVelocity(1700);
-                hood.setPosition(.57);
+                hood.setPosition(.59);
 
                 follower.setMaxPower(0.9);
                 follower.followPath(scorePreload);
@@ -234,7 +234,7 @@ public class AutonBlue2 extends OpMode {
                         flywheelLeft.setVelocity(-1800);
                         flywheelRight.setVelocity(-1800);
 
-                        hood.setPosition(.57);
+                        hood.setPosition(.59);
                         // && flywheelRight.getVelocity() > 1650 && flywheelLeft.getVelocity() > 1650 &&
                     } else if (actionTimer.getElapsedTimeSeconds() >= 1 && actionTimer.getElapsedTimeSeconds() <= 3) {
 
