@@ -345,7 +345,7 @@ public class RedTeleOp extends OpMode {
             driveState = true;
             timerA.resetTimer();
         }
-        if (driveState && timerA.getElapsedTimeSeconds() > .5){
+        if (!follower.isBusy()){
             follower.startTeleopDrive();
             driveState = false;
         }
