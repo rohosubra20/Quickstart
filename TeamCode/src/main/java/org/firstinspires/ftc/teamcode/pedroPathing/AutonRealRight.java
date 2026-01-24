@@ -116,8 +116,8 @@ public class AutonRealRight extends OpMode {
         hood = hardwareMap.get(Servo.class, "hood");
 
 
-        raxon.setPosition(.359);
-        laxon.setPosition(.359);
+        raxon.setPosition(.34);
+        laxon.setPosition(.34);
         kicker.setPosition(.4);
     /* Here is an example for Constant Interpolation
     scorePreload.setConstantInterpolation(startPose.getHeading()); *
@@ -198,9 +198,9 @@ public class AutonRealRight extends OpMode {
     public void autonomousPathUpdate() {
         switch (state) {
             case START:
-                flywheelLeft.setVelocity(1700);
-                flywheelRight.setVelocity(1700);
-                hood.setPosition(.7);
+                flywheelLeft.setVelocity(-1675);
+                flywheelRight.setVelocity(-1675);
+                hood.setPosition(.67);
                 kicker.setPosition(.3);
                 follower.setMaxPower(0.9);
                 follower.followPath(scorePreload);
@@ -217,13 +217,12 @@ public class AutonRealRight extends OpMode {
                 {
                     actionTimer.resetTimer();
                 }
-                else if (!follower.isBusy())
+                else if (!(follower.isBusy()))
                 {
 
                     if(actionTimer.getElapsedTimeSeconds() <= 1){
 
-                        flywheelLeft.setVelocity(-1700);
-                        flywheelRight.setVelocity(-1700);
+
 
 
                         // && flywheelRight.getVelocity() > 1650 && flywheelLeft.getVelocity() > 1650 &&
