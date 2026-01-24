@@ -201,10 +201,10 @@ public class AutonRealLeft extends OpMode {
             case START:
                 //flywheelLeft.setVelocity(1700);
                 //flywheelRight.setVelocity(1700);
-                flywheelLeft.setVelocity(-1700);
-                flywheelRight.setVelocity(-1700);
-                hood.setPosition(.73);
-
+                flywheelLeft.setVelocity(-1675);
+                flywheelRight.setVelocity(-1675);
+                hood.setPosition(.67);
+                kicker.setPosition(.3);
                 IntakeOuter.setPower(-.8);
                 IntakeInner.setPower(-.4);
 
@@ -226,10 +226,8 @@ public class AutonRealLeft extends OpMode {
 
                     if(actionTimer.getElapsedTimeSeconds() <= 1){
 
-                        flywheelLeft.setVelocity(-1700);
-                        flywheelRight.setVelocity(-1700);
 
-                        hood.setPosition(.56);
+                        hood.setPosition(.67);
                         // && flywheelRight.getVelocity() > 1650 && flywheelLeft.getVelocity() > 1650 &&
                     } else if (actionTimer.getElapsedTimeSeconds() >= 1 && actionTimer.getElapsedTimeSeconds() <= 3) {
 
