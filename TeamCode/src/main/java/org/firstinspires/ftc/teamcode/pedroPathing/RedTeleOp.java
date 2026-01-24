@@ -205,8 +205,6 @@ public class RedTeleOp extends OpMode {
         follower.setMaxPower(.8);
         blocker.setPosition(.3);
         kickerpos = false;
-        indicatorLight1.setPosition(RED);
-        indicatorLight2.setPosition(RED);
         raxon.setPosition(.48);
         laxon.setPosition(.48);
         hood.setPosition(.5694);
@@ -283,11 +281,6 @@ public class RedTeleOp extends OpMode {
 
         //raxon.setPosition(raxonPos);
         //laxon.setPosition(laxonPos);
-
-        if(!kickerpos){
-            indicatorLight1.setPosition(RED);
-            indicatorLight2.setPosition(RED);
-        }
 
 
         if (gamepad1.back && debounceBACK && kickerpos){
@@ -519,20 +512,7 @@ public class RedTeleOp extends OpMode {
 
 
 
-        if (actiontimer.getElapsedTime() < 3000 && macroActive) {
 
-
-            indicatorLight1.setPosition(GREEN);
-            blocker.setPosition(.50);
-            intakeOuter.setVelocity(-800);
-            intakeInner.setVelocity(400);
-        } else if (actiontimer.getElapsedTime() > 3000 && macroActive) {
-            indicatorLight1.setPosition(RED);
-            blocker.setPosition(.3);
-            intakeOuter.setVelocity(-.01);
-            intakeInner.setPower(-.01);
-            macroActive = false;
-        }
 
         if(!gamepad1.start){
             debounceStart = true;
