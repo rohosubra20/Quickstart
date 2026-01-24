@@ -118,7 +118,7 @@ public class AutonRealLeft extends OpMode {
 
         raxon.setPosition(.605);
         laxon.setPosition(.605);
-        kicker.setPosition(.4);
+        kicker.setPosition(.5);
     /* Here is an example for Constant Interpolation
     scorePreload.setConstantInterpolation(startPose.getHeading()); *
 
@@ -235,7 +235,7 @@ public class AutonRealLeft extends OpMode {
 
                         IntakeOuter.setPower(-.8);
                         IntakeInner.setPower(-.4);
-                        kicker.setPosition(.4);
+                        kicker.setPosition(.5);
 
 
                     }
