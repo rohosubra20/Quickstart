@@ -201,8 +201,8 @@ public class BlueTeleOp extends OpMode {
         follower.startTeleopDrive();
         follower.setMaxPower(.8);
         blocker.setPosition(.3);
-        indicatorLight1.setPosition(RED);
-        indicatorLight2.setPosition(RED);
+        indicatorLight1.setPosition(BLUE);
+        indicatorLight2.setPosition(BLUE);
         raxon.setPosition(.48);
         laxon.setPosition(.48);
         hood.setPosition(.5694);
@@ -288,8 +288,8 @@ public class BlueTeleOp extends OpMode {
             indicatorLight1.setPosition(GREEN);
             indicatorLight2.setPosition(GREEN);
         }else{
-            indicatorLight1.setPosition(RED);
-            indicatorLight2.setPosition(RED);
+            indicatorLight1.setPosition(BLUE);
+            indicatorLight2.setPosition(BLUE);
         }
 
         if (!gamepad1.back) {
@@ -493,7 +493,7 @@ public class BlueTeleOp extends OpMode {
             intakeOuter.setVelocity(-800);
             intakeInner.setVelocity(400);
         } else if (actiontimer.getElapsedTime() > 3000 && macroActive) {
-            indicatorLight1.setPosition(RED);
+            indicatorLight1.setPosition(BLUE);
             blocker.setPosition(.3);
             intakeOuter.setVelocity(-.01);
             intakeInner.setPower(-.01);
