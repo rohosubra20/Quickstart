@@ -307,14 +307,27 @@ public class RedTeleOp extends OpMode {
         if (gamepad1.a && !intakeOn && !debounceA){
             debounceA = true;
             intakeOn = true;
+
+        }
+        if (intakeOn) {
             intakeOuter.setPower(-.8);
-            intakeInner.setPower(.4);
+
+            if (distanceSensor.getDistance(DistanceUnit.CM) < 10){
+                intakeInner.setPower(.4);
+            }
+
+        }
+
+        if (!intakeOn) {
+
+
+            intakeOuter.setPower(0);
+            intakeInner.setPower(0);
         }
         if (gamepad1.a && intakeOn && !debounceA){
             debounceA = true;
             intakeOn = false;
-            intakeOuter.setPower(0);
-            intakeInner.setPower(0);
+
         }
         if (gamepad1.b && !feederOn && !debounceB){
             debounceB = true;
@@ -610,8 +623,7 @@ public class RedTeleOp extends OpMode {
         telemetry.addData("Angle(x/y)", Math.toDegrees(Math.atan((144-x)/(144-y))));
         telemetry.addData("position", follower.getPose());
         /*telemetryM.debug("position", follower.getPose()); */
-        telemetryM.debug("velocity", follower.getVelocity());
-        telemetryM.debug("automatedDrive", automatedDrive);
+
         telemetry.addData("YAW", imu.getRobotYawPitchRollAngles().getYaw());
         telemetry.addData("distance", distance);
         telemetry.addData("Distance Sensor", distanceSensor.getDistance(DistanceUnit.CM));
