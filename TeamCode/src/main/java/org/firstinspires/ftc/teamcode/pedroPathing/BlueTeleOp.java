@@ -203,8 +203,8 @@ public class BlueTeleOp extends OpMode {
         blocker.setPosition(.3);
         indicatorLight1.setPosition(RED);
         indicatorLight2.setPosition(RED);
-        raxon.setPosition(.5);
-        laxon.setPosition(.5);
+        raxon.setPosition(.48);
+        laxon.setPosition(.48);
         hood.setPosition(.5694);
         imu.resetYaw();
         //Parallel: .5
@@ -267,21 +267,29 @@ public class BlueTeleOp extends OpMode {
         //laxon.setPosition(laxonPos);
 
 
-        if (gamepad1.back && debounceBACK && kickerpos) {
+        if (gamepad1.back && debounceBACK && kickerpos){
             kickerpos = false;
             blocker.setPosition(.3);
             debounceBACK = false;
-            indicatorLight1.setPosition(RED);
-            indicatorLight2.setPosition(RED);
+            //indicatorLight1.setPosition(RED);
+            //indicatorLight2.setPosition(RED);
 
         }
-        if (gamepad1.back && debounceBACK && !kickerpos) {
-            blocker.setPosition(.57);
+        if (gamepad1.back && debounceBACK && !kickerpos){
+            blocker.setPosition(.57 );
             kickerpos = true;
             debounceBACK = false;
-            indicatorLight1.setPosition(BLUE);
-            indicatorLight2.setPosition(BLUE);
+            //indicatorLight1.setPosition(GREEN);
+            //indicatorLight2.setPosition(GREEN);
             actiontimer.resetTimer();
+        }
+
+        if (kickerpos){
+            indicatorLight1.setPosition(GREEN);
+            indicatorLight2.setPosition(GREEN);
+        }else{
+            indicatorLight1.setPosition(RED);
+            indicatorLight2.setPosition(RED);
         }
 
         if (!gamepad1.back) {
@@ -592,4 +600,6 @@ public class BlueTeleOp extends OpMode {
 
         }
     }
+
 }
+
