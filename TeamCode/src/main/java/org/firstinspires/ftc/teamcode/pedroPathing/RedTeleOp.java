@@ -317,7 +317,7 @@ public class RedTeleOp extends OpMode {
         if (intakeOn) {
             intakeOuter.setPower(-.8);
 
-            if (distanceSensor.getDistance(DistanceUnit.CM) > 13.5){
+            if (distanceSensor.getDistance(DistanceUnit.CM) > 13.5 || kickerpos){
                 intakeInner.setPower(.4);
             }
             else{
