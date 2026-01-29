@@ -200,10 +200,10 @@ public class RedTeleOp extends OpMode {
         blocker.setPosition(.3);
         indicatorLight1.setPosition(RED);
         indicatorLight2.setPosition(RED);
-        gate.setPosition(.5);
+
         follower.startTeleopDrive();
         follower.setMaxPower(.8);
-        blocker.setPosition(.3);
+        blocker.setPosition(.57);
         kickerpos = false;
         raxon.setPosition(.48);
         laxon.setPosition(.48);
@@ -282,7 +282,7 @@ public class RedTeleOp extends OpMode {
         //raxon.setPosition(raxonPos);
         //laxon.setPosition(laxonPos);
 
-
+/*
         if (gamepad1.back && debounceBACK && kickerpos){
             kickerpos = false;
             blocker.setPosition(.3);
@@ -293,6 +293,25 @@ public class RedTeleOp extends OpMode {
         }
         if (gamepad1.back && debounceBACK && !kickerpos){
             blocker.setPosition(.57 );
+            kickerpos = true;
+            debounceBACK = false;
+            indicatorLight1.setPosition(GREEN);
+            indicatorLight2.setPosition(GREEN);
+            actiontimer.resetTimer();
+        }
+*/
+        if (gamepad1.back && debounceBACK && kickerpos){
+            kickerpos = false;
+            //blocker.setPosition(.3);
+            gate.setPosition(.55);
+            debounceBACK = false;
+            indicatorLight1.setPosition(RED);
+            indicatorLight2.setPosition(RED);
+
+        }
+        if (gamepad1.back && debounceBACK && !kickerpos){
+            //blocker.setPosition(.57 );
+            gate.setPosition(.88);
             kickerpos = true;
             debounceBACK = false;
             indicatorLight1.setPosition(GREEN);
@@ -622,7 +641,7 @@ public class RedTeleOp extends OpMode {
         telemetry.addData("gate", gate.getPosition() );
         telemetry.addData("balls shot this burst" ,ballsPassed );
         telemetry.addData("heading according to pedro" , follower.getHeading());
-
+        telemetry.addData("gate pos",gate.getPosition());
     }
 }
 
