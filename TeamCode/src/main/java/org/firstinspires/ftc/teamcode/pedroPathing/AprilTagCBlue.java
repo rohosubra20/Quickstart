@@ -38,11 +38,11 @@ import com.qualcomm.robotcore.hardware.Servo;
 @TeleOp(name = "AprilTagCBlue")
 public class AprilTagCBlue extends LinearOpMode {
 
-    private double max = 0.02;
+    private double max = 0.01;
     private double kP = 0.08;
-    private double kI = 0.0;
-    private double kD = 0.0;
-    private double kF = 0.0;
+    private double kI = 0.00;
+    private double kD = 0.0045;
+    private double kF = 0.00;
 
     private double iSum = 0;
     private double lError = 0;
@@ -57,7 +57,7 @@ public class AprilTagCBlue extends LinearOpMode {
         limelight.pipelineSwitch(1);
         limelight.start();
 
-        double pos = .48;
+        double pos = .78;
         raxon.setPosition(pos);
         laxon.setPosition(pos);
 
@@ -71,7 +71,7 @@ public class AprilTagCBlue extends LinearOpMode {
 
 
 
-                if (Math.abs(error) > 6) {
+                if (Math.abs(error) > 7) {
 
                     double d = error - lError;
                     iSum += error;
@@ -93,7 +93,37 @@ public class AprilTagCBlue extends LinearOpMode {
                     telemetry.addData("Position", "%.4f", pos);
                     telemetry.addData("Encoder", "%.0f°", (encoder.getVoltage() / 3.3) * 360);
                     telemetry.addData("Status", "Tracking...");
-                } else {
+                }
+
+                else if (Math.abs(error) > 9) {
+
+                    double d = error - lError;
+                    iSum += error;
+
+                    double kp = 0.09;
+
+                    double kd = 0.0045;
+
+                    double c = (kp * error) + (kI * iSum) + (kd * d) + kF;
+                    lError = error;
+                    c = Math.max(-max, Math.min(max, c));
+
+                    pos += c;
+                    pos = Math.max(0.0, Math.min(1.0, pos));
+                    laxon.setPosition(pos);
+                    raxon.setPosition(pos);
+
+                    telemetry.addData("Target ID", result.getFiducialResults().get(0).getFiducialId());
+                    telemetry.addData("Error", "%.2f°", error);
+                    telemetry.addData("P term", "%.4f", kP * error);
+                    telemetry.addData("D term", "%.4f", kd * d);
+                    telemetry.addData("Correction", "%.4f", c);
+                    telemetry.addData("Position", "%.4f", pos);
+                    telemetry.addData("Encoder", "%.0f°", (encoder.getVoltage() / 3.3) * 360);
+                    telemetry.addData("Status", "Tracking...");
+                }
+
+                else {
                     telemetry.addLine("LOCKED ON");
                     telemetry.addData("Error", "%.2f°", error);
                     lError = 0;
@@ -103,7 +133,7 @@ public class AprilTagCBlue extends LinearOpMode {
                 telemetry.update();
             }
 
-            sleep(25);
+            sleep(18);
         }
     }
 }
