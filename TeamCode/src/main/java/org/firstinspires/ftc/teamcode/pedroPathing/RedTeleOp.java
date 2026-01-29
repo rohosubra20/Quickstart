@@ -231,7 +231,7 @@ public class RedTeleOp extends OpMode {
             distance = Math.sqrt(Math.pow(144-y,2) + Math.pow(144-x,2));
             flywheelVelocity = 8.87 * (distance) + 1000;
             //hood.setPosition((-.00554324 * distance + .96));
-            hood.setPosition((-.0064324 * distance + 1));
+            hood.setPosition((-.0060324 * distance + 1));
 
 //            angleToRot = (imu.getRobotYawPitchRollAngles().getYaw()) - Math.toDegrees(Math.atan((138-y)/(138-x)));
 //            laxonPos = .5 + (.28/90)*angleToRot; //if not work subtract laxon and act raxon
