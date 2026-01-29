@@ -73,7 +73,7 @@ public class AprilTagCBlue extends LinearOpMode {
 
 
 
-                if (Math.abs(error) > 7 && Math.abs(error) < 8.5) {
+                if (Math.abs(error) > 7) {
 
                     double d = error - lError;
                     iSum += error;
@@ -97,7 +97,7 @@ public class AprilTagCBlue extends LinearOpMode {
                     telemetry.addData("Status", "Tracking...");
                 }
 
-                else if (Math.abs(error) > 8.5 && Math.abs(error) < 9) {
+                else if (Math.abs(error) < 7 && Math.abs(error) > 9) {
 
                     double d = error - lError;
                     iSum += error;
