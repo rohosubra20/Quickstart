@@ -39,7 +39,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class AprilTagCBlue extends LinearOpMode {
 
     private double max = 0.01;
-    private double kP = 0.08;
+    private double kP = 0.007;
     private double kI = 0.00;
     private double kD = 0.0045;
     private double kF = 0.00;
@@ -57,7 +57,7 @@ public class AprilTagCBlue extends LinearOpMode {
         limelight.pipelineSwitch(1);
         limelight.start();
 
-        double pos = .78;
+        double pos = .48;
         raxon.setPosition(pos);
         laxon.setPosition(pos);
 
@@ -71,7 +71,9 @@ public class AprilTagCBlue extends LinearOpMode {
 
 
 
-                if (Math.abs(error) > 7) {
+
+
+                if (Math.abs(error) > 7 && Math.abs(error) < 8.5) {
 
                     double d = error - lError;
                     iSum += error;
@@ -95,14 +97,14 @@ public class AprilTagCBlue extends LinearOpMode {
                     telemetry.addData("Status", "Tracking...");
                 }
 
-                else if (Math.abs(error) > 9) {
+                else if (Math.abs(error) > 8.5 && Math.abs(error) < 9) {
 
                     double d = error - lError;
                     iSum += error;
 
-                    double kp = 0.09;
+                    double kp = 0.1;
 
-                    double kd = 0.0045;
+                    double kd = 0.05;
 
                     double c = (kp * error) + (kI * iSum) + (kd * d) + kF;
                     lError = error;
@@ -133,7 +135,7 @@ public class AprilTagCBlue extends LinearOpMode {
                 telemetry.update();
             }
 
-            sleep(18);
+            sleep(10);
         }
     }
 }
