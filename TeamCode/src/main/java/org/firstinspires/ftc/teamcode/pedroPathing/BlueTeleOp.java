@@ -594,8 +594,8 @@ public class BlueTeleOp extends OpMode {
 
             telemetry.addData("position", follower.getPose());
             /*telemetryM.debug("position", follower.getPose()); */
-            telemetryM.debug("velocity", follower.getVelocity());
-            telemetryM.debug("automatedDrive", automatedDrive);
+            //telemetryM.debug("velocity", follower.getVelocity());
+            //telemetryM.debug("automatedDrive", automatedDrive);
             telemetry.addData("YAW", imu.getRobotYawPitchRollAngles().getYaw());
             telemetry.addData("distance", distance);
             telemetry.addData("Distance Sensor", distanceSensor.getDistance(DistanceUnit.CM));
