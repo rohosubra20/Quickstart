@@ -1,4 +1,5 @@
 
+
 package org.firstinspires.ftc.teamcode.pedroPathing;
 
 import com.qualcomm.hardware.limelightvision.LLResult;
@@ -18,7 +19,7 @@ public class AprilTagCRed extends LinearOpMode {
         AnalogInput encoder = hardwareMap.get(AnalogInput.class, "absEncoder");
         Limelight3A limelight = hardwareMap.get(Limelight3A.class, "limelight");
 
-        limelight.pipelineSwitch(0);
+        limelight.pipelineSwitch(1);
         limelight.start();
 
         double pos = 0.48;
@@ -37,11 +38,10 @@ public class AprilTagCRed extends LinearOpMode {
 
                 if (Math.abs(error) > 1.0) {
                     double derivative = error - lastError;
-                    double correction = (error) - (derivative);
+                    double correction = (error*.003) - (derivative*.004);
+                    lastError = error;
 
-                    if (correction > 1) {
-                        lastError = error;
-
+                    if (correction < 1) {
                         pos += Math.max(-0.02, Math.min(0.02, correction));
                         pos = Math.max(0.19, Math.min(1.0, pos));
                         laxon.setPosition(pos);
