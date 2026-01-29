@@ -200,7 +200,7 @@ public class RedTeleOp extends OpMode {
         blocker.setPosition(.3);
         indicatorLight1.setPosition(RED);
         indicatorLight2.setPosition(RED);
-
+        gate.setPosition(.42);
         follower.startTeleopDrive();
         follower.setMaxPower(.8);
         blocker.setPosition(.57);
