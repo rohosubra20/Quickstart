@@ -1,4 +1,5 @@
 
+
 package org.firstinspires.ftc.teamcode.pedroPathing;
 
 import com.qualcomm.hardware.limelightvision.LLResult;
@@ -11,6 +12,15 @@ import com.qualcomm.robotcore.hardware.Servo;
 @TeleOp(name = "AprilTagCRed")
 public class AprilTagCRed extends LinearOpMode {
 
+    private double max = 0.01;
+    private double kP = 0.02;
+    private double kI = 0.01;
+    private double kD = 0.05;
+    private double kF = 0.00;
+
+    private double iSum = 0;
+    private double lError = 0;
+
     @Override
     public void runOpMode() {
         Servo raxon = hardwareMap.get(Servo.class, "raxon");
@@ -18,11 +28,10 @@ public class AprilTagCRed extends LinearOpMode {
         AnalogInput encoder = hardwareMap.get(AnalogInput.class, "absEncoder");
         Limelight3A limelight = hardwareMap.get(Limelight3A.class, "limelight");
 
-        limelight.pipelineSwitch(0);
+        limelight.pipelineSwitch(1);
         limelight.start();
 
-        double pos = 0.48;
-        double lastError = 0;
+        double pos = .48;
         raxon.setPosition(pos);
         laxon.setPosition(pos);
 
@@ -33,33 +42,74 @@ public class AprilTagCRed extends LinearOpMode {
 
             if (result != null && result.isValid() && !result.getFiducialResults().isEmpty()) {
                 double error = result.getFiducialResults().get(0).getTargetXDegrees();
-                double p = Math.abs(error);
 
-                if (Math.abs(error) > 1.0) {
-                    double derivative = error - lastError;
-                    double correction = (error) - (derivative);
 
-                    if (correction > 1) {
-                        lastError = error;
 
-                        pos += Math.max(-0.02, Math.min(0.02, correction));
-                        pos = Math.max(0.19, Math.min(1.0, pos));
-                        laxon.setPosition(pos);
-                        raxon.setPosition(pos);
-                    }
 
-                    telemetry.addData("Angle", "%.0f°", (encoder.getVoltage() / 3.3) * 360);
-                    telemetry.addData("error ", error);
-                    telemetry.addData("derivation", derivative);
-                    telemetry.addData("correction", correction);
-                    telemetry.addData("position", pos);
-                    telemetry.addData("raw error", p);
 
-                    telemetry.update();
+                if (Math.abs(error) > 7 && Math.abs(error) < 8.5) {
+
+                    double d = error - lError;
+                    iSum += error;
+
+                    double c = (kP * error) + (kI * iSum) + (kD * d) + kF;
+                    lError = error;
+                    c = Math.max(-max, Math.min(max, c));
+
+                    pos += c;
+                    pos = Math.max(0.0, Math.min(1.0, pos));
+                    laxon.setPosition(pos);
+                    raxon.setPosition(pos);
+
+                    telemetry.addData("Target ID", result.getFiducialResults().get(0).getFiducialId());
+                    telemetry.addData("Error", "%.2f°", error);
+                    telemetry.addData("P term", "%.4f", kP * error);
+                    telemetry.addData("D term", "%.4f", kD * d);
+                    telemetry.addData("Correction", "%.4f", c);
+                    telemetry.addData("Position", "%.4f", pos);
+                    telemetry.addData("Encoder", "%.0f°", (encoder.getVoltage() / 3.3) * 360);
+                    telemetry.addData("Status", "Tracking...");
                 }
+
+                else if (Math.abs(error) > 8.5 && Math.abs(error) < 9) {
+
+                    double d = error - lError;
+                    iSum += error;
+
+                    double kp = 0.1;
+
+                    double kd = 0.05;
+
+                    double c = (kp * error) + (kI * iSum) + (kd * d) + kF;
+                    lError = error;
+                    c = Math.max(-max, Math.min(max, c));
+
+                    pos += c;
+                    pos = Math.max(0.0, Math.min(1.0, pos));
+                    laxon.setPosition(pos);
+                    raxon.setPosition(pos);
+
+                    telemetry.addData("Target ID", result.getFiducialResults().get(0).getFiducialId());
+                    telemetry.addData("Error", "%.2f°", error);
+                    telemetry.addData("P term", "%.4f", kP * error);
+                    telemetry.addData("D term", "%.4f", kd * d);
+                    telemetry.addData("Correction", "%.4f", c);
+                    telemetry.addData("Position", "%.4f", pos);
+                    telemetry.addData("Encoder", "%.0f°", (encoder.getVoltage() / 3.3) * 360);
+                    telemetry.addData("Status", "Tracking...");
+                }
+
+                else {
+                    telemetry.addLine("LOCKED ON");
+                    telemetry.addData("Error", "%.2f°", error);
+                    lError = 0;
+                    iSum = 0;
+                }
+
+                telemetry.update();
             }
 
-            sleep(25);
+            sleep(10);
         }
     }
 }
