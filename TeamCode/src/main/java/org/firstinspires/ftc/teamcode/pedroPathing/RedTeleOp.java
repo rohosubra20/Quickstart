@@ -204,13 +204,12 @@ public class RedTeleOp extends OpMode {
         //The parameter controls whether the Follower should use break mode on the motors (using it is recommended).
         //In order to use float mode, add .useBrakeModeInTeleOp(true); to your Drivetrain Constants in Constant.java (for Mecanum)
         //If you don't pass anything in, it uses the default (false)
-        blocker.setPosition(.3);
+        blocker.setPosition(.57);
         indicatorLight1.setPosition(RED);
         indicatorLight2.setPosition(RED);
-        gate.setPosition(.42);
+        gate.setPosition(.55);
         follower.startTeleopDrive();
         follower.setMaxPower(.8);
-        blocker.setPosition(.57);
         kickerpos = false;
         raxon.setPosition(.48);
         laxon.setPosition(.48);
@@ -237,8 +236,8 @@ public class RedTeleOp extends OpMode {
             y = follower.getPose().getY();
             distance = Math.sqrt(Math.pow(144-y,2) + Math.pow(144-x,2));
             flywheelVelocity = 8.87 * (distance) + 1000;
-            //hood.setPosition((-.00554324 * distance + .96));
-            hood.setPosition((-.0060324 * distance + 1));
+            hood.setPosition((-.00554324 * distance + .96));
+
 
 //            angleToRot = (imu.getRobotYawPitchRollAngles().getYaw()) - Math.toDegrees(Math.atan((138-y)/(138-x)));
 //            laxonPos = .5 + (.28/90)*angleToRot; //if not work subtract laxon and act raxon
@@ -289,35 +288,16 @@ public class RedTeleOp extends OpMode {
         //raxon.setPosition(raxonPos);
         //laxon.setPosition(laxonPos);
 
-/*
+
         if (gamepad1.back && debounceBACK && kickerpos){
             kickerpos = false;
-            blocker.setPosition(.3);
+            gate.setPosition(.55);
             debounceBACK = false;
             indicatorLight1.setPosition(RED);
             indicatorLight2.setPosition(RED);
 
         }
         if (gamepad1.back && debounceBACK && !kickerpos){
-            blocker.setPosition(.57 );
-            kickerpos = true;
-            debounceBACK = false;
-            indicatorLight1.setPosition(GREEN);
-            indicatorLight2.setPosition(GREEN);
-            actiontimer.resetTimer();
-        }
-*/
-        if (gamepad1.back && debounceBACK && kickerpos){
-            kickerpos = false;
-            //blocker.setPosition(.3);
-            gate.setPosition(.42);
-            debounceBACK = false;
-            indicatorLight1.setPosition(RED);
-            indicatorLight2.setPosition(RED);
-
-        }
-        if (gamepad1.back && debounceBACK && !kickerpos){
-            //blocker.setPosition(.57 );
             gate.setPosition(.88);
             kickerpos = true;
             debounceBACK = false;
@@ -653,7 +633,7 @@ public class RedTeleOp extends OpMode {
         telemetry.addData("gate", gate.getPosition() );
         telemetry.addData("balls shot this burst" ,ballsPassed );
         telemetry.addData("heading according to pedro" , follower.getHeading());
-        telemetry.addData("gate pos",gate.getPosition());
+
     }
 }
 
