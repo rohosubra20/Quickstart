@@ -39,9 +39,9 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class AprilTagCBlue extends LinearOpMode {
 
     private double max = 0.01;
-    private double kP = 0.007;
+    private double kP = 0.07;
     private double kI = 0.00;
-    private double kD = 0.0045;
+    private double kD = 0.00;
     private double kF = 0.00;
 
     private double iSum = 0;
@@ -69,10 +69,6 @@ public class AprilTagCBlue extends LinearOpMode {
             if (result != null && result.isValid() && !result.getFiducialResults().isEmpty()) {
                 double error = result.getFiducialResults().get(0).getTargetXDegrees();
 
-
-
-
-
                 if (Math.abs(error) > 7 && Math.abs(lError) > 7 ) {
 
                     double d = error - lError;
@@ -96,34 +92,34 @@ public class AprilTagCBlue extends LinearOpMode {
                     telemetry.addData("Encoder", "%.0f°", (encoder.getVoltage() / 3.3) * 360);
                     telemetry.addData("Status", "Tracking...");
                 }
-
-                else if (Math.abs(error) < 7 && Math.abs(error) > 9) {
-
-                    double d = error - lError;
-                    iSum += error;
-
-                    double kp = 0.1;
-
-                    double kd = 0.05;
-
-                    double c = (kp * error) + (kI * iSum) + (kd * d) + kF;
-                    lError = error;
-                    c = Math.max(-max, Math.min(max, c));
-
-                    pos += c;
-                    pos = Math.max(0.0, Math.min(1.0, pos));
-                    laxon.setPosition(pos);
-                    raxon.setPosition(pos);
-
-                    telemetry.addData("Target ID", result.getFiducialResults().get(0).getFiducialId());
-                    telemetry.addData("Error", "%.2f°", error);
-                    telemetry.addData("P term", "%.4f", kP * error);
-                    telemetry.addData("D term", "%.4f", kd * d);
-                    telemetry.addData("Correction", "%.4f", c);
-                    telemetry.addData("Position", "%.4f", pos);
-                    telemetry.addData("Encoder", "%.0f°", (encoder.getVoltage() / 3.3) * 360);
-                    telemetry.addData("Status", "Tracking...");
-                }
+//
+//                else if (Math.abs(error) < 7 && Math.abs(error) > 9) {
+//
+//                    double d = error - lError;
+//                    iSum += error;
+//
+//                    double kp = 0.1;
+//
+//                    double kd = 0.00;
+//
+//                    double c = (kp * error) + (kI * iSum) + (kd * d) + kF;
+//                    lError = error;
+//                    c = Math.max(-max, Math.min(max, c));
+//
+//                    pos += c;
+//                    pos = Math.max(0.0, Math.min(1.0, pos));
+//                    laxon.setPosition(pos);
+//                    raxon.setPosition(pos);
+//
+//                    telemetry.addData("Target ID", result.getFiducialResults().get(0).getFiducialId());
+//                    telemetry.addData("Error", "%.2f°", error);
+//                    telemetry.addData("P term", "%.4f", kP * error);
+//                    telemetry.addData("D term", "%.4f", kd * d);
+//                    telemetry.addData("Correction", "%.4f", c);
+//                    telemetry.addData("Position", "%.4f", pos);
+//                    telemetry.addData("Encoder", "%.0f°", (encoder.getVoltage() / 3.3) * 360);
+//                    telemetry.addData("Status", "Tracking...");
+//                }
 
                 else {
                     telemetry.addLine("LOCKED ON");
