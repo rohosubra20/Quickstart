@@ -43,6 +43,8 @@ public class RedTeleOp extends OpMode {
 
     private DcMotorEx frontRightMotor, frontLeftMotor, backRightMotor, backLeftMotor;
     private boolean driveState;
+
+    private boolean gateOpen;
     private Servo gate;
     private boolean macroActive;
     private boolean debounceA;
@@ -167,6 +169,7 @@ public class RedTeleOp extends OpMode {
         GREEN = .5;
         RED = 0.6;
         flywheelVelocity = 1600;
+        gateOpen = false;
         intakeOn = false;
         flywheelOn = false;
         feederOn = false;
@@ -313,7 +316,7 @@ public class RedTeleOp extends OpMode {
         if (intakeOn) {
             intakeOuter.setPower(-.8);
 
-            if (distanceSensor.getDistance(DistanceUnit.CM) > 13.5 || kickerpos){
+            if (kickerpos){
                 intakeInner.setPower(.4);
             }
             else{
@@ -473,13 +476,13 @@ public class RedTeleOp extends OpMode {
 
 
         if(gamepad1.dpad_up && flywheelOn && !debounce_dpad_up){
-            flywheelVelocity += 100;
+            flywheelVelocity += 50;
             flywheelLeft.setVelocity(flywheelVelocity);
             flywheelRight.setVelocity(flywheelVelocity);
             debounce_dpad_up = true;
         }
         if(gamepad1.dpad_down && flywheelOn && !debounce_dpad_down){
-            flywheelVelocity -= 100;
+            flywheelVelocity -= 50;
             flywheelLeft.setVelocity(flywheelVelocity);
             flywheelRight.setVelocity(flywheelVelocity);
             debounce_dpad_down = true;
@@ -609,10 +612,11 @@ public class RedTeleOp extends OpMode {
         //telemetry.addData("laxon",laxon.getPosition());
         telemetry.addData("atr", angleToRot);
         telemetry.addData("flywheel velocity",flywheelLeft.getVelocity());
+        telemetry.addData("attempted flywheel velocity", 8.87 * (distance) + 1000);
         telemetry.addData("debounce y", debounceY);
-        telemetry.addData("Angle(y/x)", Math.toDegrees(Math.atan((144-y)/(144-x))));
-        telemetry.addData("Angle(x/y)", Math.toDegrees(Math.atan((144-x)/(144-y))));
-        telemetry.addData("position", follower.getPose());
+        telemetry.addData("Pedro pose", follower.getPose());
+
+        telemetry.addData("heading", follower.getHeading());
         /*telemetryM.debug("position", follower.getPose()); */
 
         telemetry.addData("YAW", imu.getRobotYawPitchRollAngles().getYaw());
