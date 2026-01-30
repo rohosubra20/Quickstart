@@ -366,7 +366,7 @@ public class RedTeleOp extends OpMode {
             debounceRB = true;
         }
 
-        if (gamepad1.guide){
+        if (gamepad1.guide && debounceGUIDE){
             automatedDrive = true;
 
                 toFarShoot = follower.pathBuilder()
@@ -376,13 +376,10 @@ public class RedTeleOp extends OpMode {
                         .build();
 
                 follower.followPath(toFarShoot);
+                debounceGUIDE = false;
+        }
 
-        }
-        if (!gamepad1.guide && !driveState){
-            follower.startTeleopDrive();
-            driveState = true;
-            debounceGUIDE = false;
-        }
+
 
 
 
@@ -583,10 +580,10 @@ public class RedTeleOp extends OpMode {
                 double frontRightPower = (y - x - rx) / denominator;
                 double backRightPower = (y + x - rx) / denominator;
 
-                frontLeftMotor.setPower(frontLeftPower);
-                backLeftMotor.setPower(backLeftPower);
-                frontRightMotor.setPower(frontRightPower);
-                backRightMotor.setPower(backRightPower);
+                frontLeftMotor.setVelocity(500 * frontLeftPower);
+                backLeftMotor.setVelocity(500 * backLeftPower);
+                frontRightMotor.setVelocity(500 * frontRightPower);
+                backRightMotor.setVelocity(500 * backRightPower);
             }
 
             if (!follower.isBusy()){
@@ -626,7 +623,10 @@ public class RedTeleOp extends OpMode {
 
         telemetry.addData("heading", follower.getHeading());
         /*telemetryM.debug("position", follower.getPose()); */
-
+        telemetry.addData("FL motor", frontLeftMotor.getVelocity());
+        telemetry.addData("FR motor", frontRightMotor.getVelocity());
+        telemetry.addData("BR motor", backRightMotor.getVelocity());
+        telemetry.addData("BL motor", backLeftMotor.getVelocity());
         telemetry.addData("YAW", imu.getRobotYawPitchRollAngles().getYaw());
         telemetry.addData("distance", distance);
         telemetry.addData("Distance Sensor", distanceSensor.getDistance(DistanceUnit.CM));
