@@ -38,6 +38,9 @@ public class RedTeleOp extends OpMode {
 
     private double RED;
 
+    private PathChain toFarShoot;
+    private Pose FarShootPose;
+
     private double GREEN;
     private Follower follower;
 
@@ -131,6 +134,7 @@ public class RedTeleOp extends OpMode {
 
         follower = Constants.createFollower(hardwareMap);
         follower.setStartingPose(new Pose(84, 36, Math.toRadians(0)));
+        FarShootPose = new Pose(82, 15, Math.toRadians(64.33));
         follower.update();
         telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
         flywheelLeft = hardwareMap.get(DcMotorEx.class, "flyL");
@@ -383,13 +387,15 @@ public class RedTeleOp extends OpMode {
         }
 
         if (gamepad1.guide){
+            automatedDrive = true;
 
+                toFarShoot = follower.pathBuilder()
+                        .addPath(new BezierLine(follower.getPose() , FarShootPose))
+                        .setLinearHeadingInterpolation(follower.getPose().getHeading(), FarShootPose.getHeading())
 
-            //
+                        .build();
 
-            follower.turnTo(Math.toRadians(45));
-            debounceGUIDE = false;
-            driveState = false;
+                follower.followPath(toFarShoot);
 
         }
         if (!gamepad1.guide && !driveState){
@@ -540,6 +546,8 @@ public class RedTeleOp extends OpMode {
         if(!gamepad1.start){
             debounceStart = true;
         }
+
+
 
 
 
