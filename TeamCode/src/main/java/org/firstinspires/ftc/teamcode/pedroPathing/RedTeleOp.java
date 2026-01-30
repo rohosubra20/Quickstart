@@ -197,13 +197,12 @@ public class RedTeleOp extends OpMode {
         //The parameter controls whether the Follower should use break mode on the motors (using it is recommended).
         //In order to use float mode, add .useBrakeModeInTeleOp(true); to your Drivetrain Constants in Constant.java (for Mecanum)
         //If you don't pass anything in, it uses the default (false)
-        blocker.setPosition(.3);
+        blocker.setPosition(.57);
         indicatorLight1.setPosition(RED);
         indicatorLight2.setPosition(RED);
-        gate.setPosition(.5);
+        gate.setPosition(.55);
         follower.startTeleopDrive();
         follower.setMaxPower(.8);
-        blocker.setPosition(.3);
         kickerpos = false;
         raxon.setPosition(.48);
         laxon.setPosition(.48);
@@ -285,14 +284,14 @@ public class RedTeleOp extends OpMode {
 
         if (gamepad1.back && debounceBACK && kickerpos){
             kickerpos = false;
-            blocker.setPosition(.3);
+            gate.setPosition(.55);
             debounceBACK = false;
             indicatorLight1.setPosition(RED);
             indicatorLight2.setPosition(RED);
 
         }
         if (gamepad1.back && debounceBACK && !kickerpos){
-            blocker.setPosition(.57 );
+            gate.setPosition(.88);
             kickerpos = true;
             debounceBACK = false;
             indicatorLight1.setPosition(GREEN);
